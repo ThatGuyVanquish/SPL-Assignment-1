@@ -20,20 +20,20 @@ int Customer::getId() const
 
 // Sweaty Customer Constructor
 SweatyCustomer::SweatyCustomer(std::string name, int id): 
-Customer::Customer(name, id)
+    Customer::Customer(name, id)
 {};
 
 // Cheap Customer Constructor
 CheapCustomer::CheapCustomer(std::string name, int id): 
-Customer::Customer(name, id)
+    Customer::Customer(name, id)
 {};
 
 // Heavy Muscle Customer Constructor
 HeavyMuscleCustomer::HeavyMuscleCustomer(std::string name, int id): 
-Customer::Customer(name, id)
+    Customer::Customer(name, id)
 {};
 
 // Full Body Customer Constructor
 FullBodyCustomer::FullBodyCustomer(std::string name, int id): 
-Customer::Customer(name, id)
+    Customer::Customer(name, id)
 {};
