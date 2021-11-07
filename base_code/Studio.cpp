@@ -28,9 +28,9 @@ Studio::Studio(const std::string &configFilePath){
          }
                
     }
-    for (int j = 0; j < temp.size(); j++)
+    for (int j = 0; j < text_by_lines.size(); j++)
     {
-      if(temp[j][0]='#'){
+      if(text_by_lines[j][0]='#'){
        j=j+1; 
        data_type+=1; //1 is num of trainers, 2 is capcitiys, 3 is workout types.  
       }
