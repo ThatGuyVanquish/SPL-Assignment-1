@@ -15,8 +15,23 @@ Trainer::Trainer(const Trainer& t):
     orderList(t.orderList)
     {};
 
+
 //Trainer Copy Assignment
-//Trainer::Trainer&()
+Trainer& Trainer::operator=(const Trainer& t)
+{
+    if (this!= &t)
+    {
+        capacity = t.capacity;
+        open = t.open;
+        for (Customer* customer : customersList)
+            delete customer;
+        customersList.clear();
+        for (Customer* customer : t.customersList)
+            customersList.push_back(customer);
+        
+        orderList = t.orderList;
+    }
+}
 
 int Trainer::getCapacity() const 
     {
@@ -25,8 +40,8 @@ int Trainer::getCapacity() const
 
 void Trainer::addCustomer(Customer* customer) 
 {
-    capacity++;
-    customersList.insert(customersList.begin()+capacity, customer);
+    if (customersList.size() < capacity)
+        customersList.push_back(customer);
 }
 
 void Trainer::removeCustomer(int id) 
