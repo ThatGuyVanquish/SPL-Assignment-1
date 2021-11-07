@@ -11,6 +11,8 @@
 class Studio{		
 public:
 	Studio();
+    Studio(const Studio &StudioOther); //copy constactor
+    Studio operator=(const Studio &StudioOther);
     Studio(const std::string &configFilePath);
     void start();
     int getNumOfTrainers() const;
@@ -23,6 +25,7 @@ private:
     std::vector<Trainer*> trainers;
     std::vector<Workout> workout_options;
     std::vector<BaseAction*> actionsLog;
+    std::vector<std::string>* SplitSentence(const std::string &Sentence, char splt ); // helper method to phrase the input
 };
 
 #endif
