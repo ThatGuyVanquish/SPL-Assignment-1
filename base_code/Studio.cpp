@@ -68,7 +68,7 @@ Trainer* Studio::getTrainer(int tid){
     }
 
 
-void Studio :: strart(){
+void Studio :: start(){
     std::cout<<"The Studio is now open!"<<std::endl;
 }
 

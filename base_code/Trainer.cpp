@@ -1,5 +1,4 @@
 #include "Trainer.h"
-#include <vector>
 
 using namespace std;
 
@@ -7,6 +6,17 @@ using namespace std;
 Trainer::Trainer(int t_capacity): 
     capacity(t_capacity)
     {};
+
+//Trainer Copy Constructor
+Trainer::Trainer(const Trainer& t):
+    capacity(t.capacity), 
+    open(t.open),
+    customersList(t.customersList),
+    orderList(t.orderList)
+    {};
+
+//Trainer Copy Assignment
+//Trainer::Trainer&()
 
 int Trainer::getCapacity() const 
     {
@@ -46,13 +56,35 @@ std::vector<Customer*>& Trainer::getCustomers()
     return customersList;
 }
 
-std::vector<OrderPair>& Trainer::getOrders() {
+std::vector<OrderPair>& Trainer::getOrders() 
+{
     return orderList;
 }
 
 // void Trainer::order(const int customer_id, const std::vector<int> workout_ids, const std::vector<Workout>& workout_options):{};
 
-void Trainer:: openTrainer() {
-    if (customersList.size() < capacity)
+void Trainer::openTrainer() 
+{
+    if (customersList.size() < capacity) // Unnecessary?
         open = true;
+}
+
+void Trainer::closeTrainer() 
+{
+    open = false;
+}
+
+int Trainer::getSalary() 
+{
+    int ret = 0;
+    for (OrderPair& order : orderList) 
+    {
+        ret += order.second.getPrice();
+    }
+    return ret;
+}
+
+bool Trainer::isOpen() 
+{
+    return open;
 }
