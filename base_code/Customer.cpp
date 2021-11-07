@@ -8,6 +8,15 @@ Customer::Customer(std::string c_name, int c_id):
     id(c_id)
     {};
 
+Customer::Customer(const Customer& c_existing):
+    name(c_existing.name),
+    id(c_existing.id)
+    {};
+
+void Customer::clone(Customer* c_existing)
+{
+    
+}
 std::string Customer::getName() const 
 {
     return name;

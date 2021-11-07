@@ -27,7 +27,7 @@ Trainer& Trainer::operator=(const Trainer& t)
             delete customer;
         customersList.clear();
         for (Customer* customer : t.customersList)
-            customersList.push_back(customer);
+            customersList.push_back(customer->clone());
         
         orderList = t.orderList;
     }
