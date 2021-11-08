@@ -61,7 +61,7 @@ int Studio::getNumOfTrainers() const{
   
 }
 Trainer* Studio::getTrainer(int tid){
-        return  trainers[tid];
+        return  trainers[tid]; // what happens here if tid > amount of trainers
 
     }
 const std::vector<BaseAction*>& Studio::getActionsLog() const{
