@@ -4,7 +4,10 @@ using namespace std;
 
 //Trainer Constructor
 Trainer::Trainer(int t_capacity): 
-    capacity(t_capacity)
+    capacity(t_capacity),
+    open(false),
+    customersList(),
+    orderList()
     {};
 
 //Trainer Copy Constructor
@@ -12,9 +15,9 @@ Trainer::Trainer(const Trainer& t):
     capacity(t.capacity), 
     open(t.open),
     customersList(t.customersList),
-    orderList(t.orderList)
+    orderList(t.orderList),
+    salary(0)
     {};
-
 
 //Trainer Copy Assignment
 Trainer& Trainer::operator=(const Trainer& t)
@@ -28,7 +31,6 @@ Trainer& Trainer::operator=(const Trainer& t)
         customersList.clear();
         for (Customer* customer : t.customersList)
             customersList.push_back(customer->clone());
-        
         orderList = t.orderList;
     }
 }
@@ -80,8 +82,7 @@ std::vector<OrderPair>& Trainer::getOrders()
 
 void Trainer::openTrainer() 
 {
-    if (customersList.size() < capacity) // Unnecessary?
-        open = true;
+    open = true;
 }
 
 void Trainer::closeTrainer() 
@@ -91,12 +92,11 @@ void Trainer::closeTrainer()
 
 int Trainer::getSalary() 
 {
-    int ret = 0;
     for (OrderPair& order : orderList) 
     {
-        ret += order.second.getPrice();
+        salary += order.second.getPrice();
     }
-    return ret;
+    return salary;
 }
 
 bool Trainer::isOpen() 
