@@ -23,6 +23,11 @@ int Customer::getId() const
     return id;
 }
 
+Customer::~Customer() 
+{
+    delete this;
+}
+
 // Sweaty Customer Constructor
 SweatyCustomer::SweatyCustomer(std::string name, int id): 
     Customer::Customer(name, id)
@@ -32,6 +37,23 @@ SweatyCustomer::SweatyCustomer(std::string name, int id):
 SweatyCustomer::SweatyCustomer(const SweatyCustomer& _sc):
     Customer::Customer(_sc.getName(), _sc.getId())
     {};
+
+SweatyCustomer& SweatyCustomer::operator=(const SweatyCustomer& _sc)
+{
+    if (this == &_sc)
+    {
+        return *this;
+    }
+    delete this;
+    //SweatyCustomer* temp = (_sc).clone();
+    //this(_sc.clone());
+    return *this;
+}
+
+SweatyCustomer::~SweatyCustomer() 
+{
+    delete this;
+}
 
 Customer* SweatyCustomer::clone()  
 {

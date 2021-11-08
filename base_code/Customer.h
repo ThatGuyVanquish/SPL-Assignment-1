@@ -9,6 +9,7 @@ class Customer{
 public:
     Customer(std::string c_name, int c_id);
     Customer(const Customer& c_existing);
+    ~Customer();
     virtual Customer* clone();
     virtual std::vector<int> order(const std::vector<Workout> &workout_options)=0;
     virtual std::string toString() const = 0;
@@ -23,6 +24,8 @@ class SweatyCustomer : public Customer {
 public:
 	SweatyCustomer(std::string name, int id);
     SweatyCustomer(const SweatyCustomer& _cs);
+    SweatyCustomer& operator=(const SweatyCustomer& _sc);
+    ~SweatyCustomer();
     std::vector<int> order(const std::vector<Workout> &workout_options);
     std::string toString() const;
     virtual Customer* clone() override;
