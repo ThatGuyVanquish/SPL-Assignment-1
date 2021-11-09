@@ -1,16 +1,11 @@
 #include "Customer.h"
-
+#include <algorithm>>
 using namespace std;
 
 // Concstructor
 Customer::Customer(std::string c_name, int c_id):
     name(c_name),
     id(c_id)
-    {};
-
-Customer::Customer(const Customer& c_existing):
-    name(c_existing.name),
-    id(c_existing.id)
     {};
 
 std::string Customer::getName() const 
@@ -23,41 +18,22 @@ int Customer::getId() const
     return id;
 }
 
-Customer::~Customer() 
-{
-    delete this;
-}
-
 // Sweaty Customer Constructor
 SweatyCustomer::SweatyCustomer(std::string name, int id): 
     Customer::Customer(name, id)
     {};
 
-//Cheap Customer Copy Constructor
-SweatyCustomer::SweatyCustomer(const SweatyCustomer& _sc):
-    Customer::Customer(_sc.getName(), _sc.getId())
-    {};
-
-SweatyCustomer& SweatyCustomer::operator=(const SweatyCustomer& _sc)
+std::vector<int> SweatyCustomer::order(const std::vector<Workout>& workoutOptions)
 {
-    if (this == &_sc)
+    std:vector<int> wrk;
+    for (Workout workout : workoutOptions)
     {
-        return *this;
+        if (workout.getType() == CARDIO)
+        {
+            wrk.push_back(workout.getId());
+        }
     }
-    delete this;
-    //SweatyCustomer* temp = (_sc).clone();
-    //this(_sc.clone());
-    return *this;
-}
-
-SweatyCustomer::~SweatyCustomer() 
-{
-    delete this;
-}
-
-Customer* SweatyCustomer::clone()  
-{
-    return new SweatyCustomer::SweatyCustomer(this->getName(), this->getId());
+    return wrk;
 }
 
 // Cheap Customer Constructor
@@ -65,14 +41,19 @@ CheapCustomer::CheapCustomer(std::string name, int id):
     Customer::Customer(name, id)
 {};
 
-//Cheap Customer Copy Constructor
-CheapCustomer::CheapCustomer(const CheapCustomer& _cc):
-    Customer::Customer(_cc.getName(), _cc.getId())
-    {};
-
-Customer* CheapCustomer::clone()  
+std::vector<int> CheapCustomer::order(const std::vector<Workout>& workoutOptions)
 {
-    return new CheapCustomer::CheapCustomer(this->getName(), this->getId());
+    int minPrice(workoutOptions[0].getPrice());
+    int minId = 0;
+    for (Workout wrk : workoutOptions)
+    {
+        if (wrk.getPrice() < minPrice)
+        {
+            minPrice = wrk.getPrice();
+            minId = wrk.getId();
+        }
+    }
+    return vector<int>(minId);
 }
 
 // Heavy Muscle Customer Constructor
@@ -80,14 +61,37 @@ HeavyMuscleCustomer::HeavyMuscleCustomer(std::string name, int id):
     Customer::Customer(name, id)
 {};
 
-//Heavy Muscle Customer Copy Constructor
-HeavyMuscleCustomer::HeavyMuscleCustomer(const HeavyMuscleCustomer& _hmc):
-    Customer::Customer(_hmc.getName(),_hmc.getId())
-    {};
-
-Customer* HeavyMuscleCustomer::clone()  
+std::vector<int> HeavyMuscleCustomer::order(const std::vector<Workout>& workoutOptions)
 {
-    return new HeavyMuscleCustomer::HeavyMuscleCustomer(this->getName(), this->getId());
+    std::vector<int> wrk;
+    std::vector<Workout> wrkCOpy(workoutOptions);
+    std::sort(wrkCOpy.begin(), wrkCOpy.end(), compareAnae);
+    for (Workout workout : wrkCOpy)
+    {
+        if (workout.getType() == ANAEROBIC)
+        {
+            wrk.push_back(workout.getId());
+        }
+    }
+    return wrk;
+}
+
+bool compareAnae(Workout w1, Workout w2)
+{
+    if (w1.getType() == ANAEROBIC)
+    {
+        if (w2.getType() != ANAEROBIC)
+            return false;
+        else
+        {
+            return w1.getPrice() < w2.getPrice();
+        }
+    }
+    else if (w2.getType() == ANAEROBIC)
+    {
+        return true;
+    }
+    return false;;
 }
 
 // Full Body Customer Constructor
@@ -95,12 +99,56 @@ FullBodyCustomer::FullBodyCustomer(std::string name, int id):
     Customer::Customer(name, id)
 {};
 
-//Full Body Customer Copy Constructor
-FullBodyCustomer::FullBodyCustomer(const FullBodyCustomer& _fbc):
-    Customer::Customer(_fbc.getName(), _fbc.getId())
-    {};
-
-Customer* FullBodyCustomer::clone()  
+std::vector<int> FullBodyCustomer::order(const std::vector<Workout>& workoutOptions)
 {
-    return new FullBodyCustomer::FullBodyCustomer(this->getName(), this->getId());
+    int anaeId = -1;
+    int anaeMin;
+    int cardioId = -1;
+    int cardioMin;
+    int mixId = -1;
+    int mixMax;
+    for (Workout workout : workoutOptions)
+    {
+        if (workout.getType() == ANAEROBIC)
+        {
+            if (anaeId == -1)
+            {
+                anaeMin = workout.getPrice();
+                anaeId = workout.getId();
+            }
+            else if (anaeMin > workout.getPrice())
+            {
+                anaeMin = workout.getPrice();
+                anaeId = workout.getId();
+            }            
+        }
+        else if(workout.getType() == CARDIO)
+        {
+            if (cardioId == -1)
+            {
+                cardioMin = workout.getPrice();
+                cardioId = workout.getId();
+            }
+            else if (cardioMin > workout.getPrice())
+            {
+                cardioMin = workout.getPrice();
+                cardioId = workout.getId();
+            }            
+        }
+        else
+        {
+            if (mixId == -1)
+            {
+                mixMax = workout.getPrice();
+                mixId = workout.getId();
+            }
+            else if (mixMax < workout.getPrice())
+            {
+                mixMax = workout.getPrice();
+                mixId = workout.getId();
+            }
+        }
+    }
+    std::vector<int> ret = {cardioId, mixId, anaeId};
+    return ret;
 }
