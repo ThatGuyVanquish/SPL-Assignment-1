@@ -24,38 +24,42 @@ void BaseAction::error(std::string err)
 }
 
 OpenTrainer::OpenTrainer(int _id, std::vector<Customer*> &customersList):
-    BaseAction(),
+    BaseAction(), // maybe useless
     trainerId(_id),
     customers(customersList),
     isOpen(false)
     {};
 
 void OpenTrainer::act(Studio& studio)
-{
-    // add check if trainer exists
+{  
     Trainer* trainer = studio.getTrainer(trainerId);
-    if (trainer->isOpen())
+    if (trainer == nullptr || trainer -> isOpen())
     {
         error("Workout session does not exist or is already open.");
     }
     else
     {
-        trainer->openTrainer();
+        trainer -> openTrainer();
+        isOpen = true;
+        thisStudio = studio;
     }
-    isOpen = true;
 }
 
 std::string OpenTrainer::toString() const 
 {
-    std::string ret("Trainer " + trainerId + " status: "); // no idea why this is broken
+    std::string ret("Trainer " + trainerId); // no idea why this is broken
+    ret.append(" status: ");
     if (isOpen)
     {
         ret.append("open\n");
         std::string workouts;
-        for (int i = 0; i <= customers.size(); i++)
+        for (Customer* customer : customers)
         {
-            ret.append("" + customers[i]->getId() + customers[i]->getName() + "\n");
-            for (&Workout workout : customers[i].)
+            ret.append("" + customer->getId() + customer->getName() + "\n");
+            for (Workout workout : thisStudio.getWorkoutOptions())
+            {
+                
+            }
         }
     ret.append("Current Trainer's Salary: ");//UNIMPLEMENTED NEED A WAY TO RETURN SALARY
     }
