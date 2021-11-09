@@ -1,17 +1,26 @@
 #include "Studio.h"
 #include <iostream>
-//using namespace std;
+#include <fstream>
+using namespace std;
 Studio::Studio(){
 
 }
 Studio::Studio(const std::string &configFilePath){  
+    string Text;
+    ifstream MyReadFile(configFilePath);
+    while (getline(MyReadFile,Text))
+    {
+      //nothing
+    }
+    MyReadFile.close();
+
     int data_type = 0; 
     int workout_id =0;
     std::string workout_name("");
     WorkoutType workout;
     std::string workoutTypeStr;
     int workout_price;  
-    std::vector<std::string>* text_by_lines = SplitSentence(configFilePath,'\n');   
+    std::vector<std::string>* text_by_lines = SplitSentence(Text,'\n');   
     std::vector<std::string>* WordsFromCase_;
     
     for (int j = 0; j < text_by_lines->size(); j++)
@@ -61,11 +70,11 @@ int Studio::getNumOfTrainers() const{
   
 }
 Trainer* Studio::getTrainer(int tid){
-        return  trainers[tid]; // what happens here if tid > amount of trainers
+        return  trainers[tid];
 
     }
 const std::vector<BaseAction*>& Studio::getActionsLog() const{
-
+    return actionsLog;
     } // Return a reference to the history of actions  	
 std::vector<Workout>& Studio::getWorkoutOptions(){
     return  workout_options;
@@ -95,10 +104,61 @@ std::vector<std::string>* Studio::SplitSentence(const std::string &Sentence, cha
          return text_by_lines;
     }
 }
-Studio::Studio(const Studio &StudioOther){
+Studio::Studio(const Studio &StudioOther){ // probably like operator == but withoiut deletion
+   for (int i = 0; i < trainers.size(); i++)
+    {
+     
+      delete trainers[i];
+    }
+    for (int i = 0; i < StudioOther.trainers.size(); i++)
+    {
+     
+      trainers.push_back(StudioOther.trainers[i]->clone());
+    }
+    for (int i = 0; i < actionsLog.size(); i++)
+    {
+     
+      delete actionsLog[i];
+    }
+    for (int i = 0; i < StudioOther.actionsLog.size(); i++)
+    {
+     
+      actionsLog.push_back(StudioOther.actionsLog[i]->clone());
+    } 
+     workout_options = StudioOther.workout_options;
+
 
 }
-Studio Studio::operator=(const Studio &StudioOther){
+Studio Studio::operator=(const Studio &StudioOther){ //move constractor
+  if( this == &StudioOther)
+  { //self assgiment
+    return *this;
+  }
+  else
+  {
+     for (int i = 0; i < trainers.size(); i++)
+    {
+     
+      delete trainers[i];
+    }
+    for (int i = 0; i < StudioOther.trainers.size(); i++)
+    {
+     
+      trainers.push_back(StudioOther.trainers[i]->clone());
+    }
+    for (int i = 0; i < actionsLog.size(); i++)
+    {
+     
+      delete actionsLog[i];
+    }
+    for (int i = 0; i < StudioOther.actionsLog.size(); i++)
+    {
+     
+      actionsLog.push_back(StudioOther.actionsLog[i]->clone());
+    } 
+     workout_options = StudioOther.workout_options;
+    
+  }
 
 }
 
