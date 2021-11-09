@@ -8,39 +8,36 @@ Studio::Studio(){
 Studio::Studio(const std::string &configFilePath){  
     string Text;
     ifstream MyReadFile(configFilePath);
-    while (getline(MyReadFile,Text))
-    {
-      //nothing
-    }
-    MyReadFile.close();
-
     int data_type = 0; 
-    int workout_id =0;
     std::string workout_name("");
     WorkoutType workout;
     std::string workoutTypeStr;
-    int workout_price;  
-    std::vector<std::string>* text_by_lines = SplitSentence(Text,'\n');   
     std::vector<std::string>* WordsFromCase_;
-    
-    for (int j = 0; j < text_by_lines->size(); j++)
+    int workout_price;  
+    int workoutId = 0;
+    while (getline(MyReadFile,Text))
     {
-      if((*text_by_lines)[j][0]='#'){
-       j=j+1; 
-       data_type+=1; //1 is num of trainers, 2 is capcitiys, 3 is workout types.  
+            if (Text.empty())
+      {
+        continue;
       }
-      if(data_type==2){
-          for(int i = 0;i<(*text_by_lines)[j].size();i++){ //Checking which charcaters are numbers.
-            char c = (*text_by_lines)[j][i];
-            int currnum = c - '0';
-            if(currnum>=0 and currnum<=9)//Currnum is indeed a number
-            { 
-             trainers.push_back(new Trainer (currnum)); // creating new, potential memory leaks
-            }    
-          }         
+      if (Text[0] == '#')
+      {
+        data_type++;
       }
-      if(data_type==3){
-        WordsFromCase_ = SplitSentence((*text_by_lines)[j],',');  
+      else if (data_type == 2) 
+      // 1 Is unnecessary because we can count number of different capacities
+      {
+        std::vector<std::string>* text_by_lines = SplitSentence(Text,',');
+        for (std::string str : *text_by_lines)
+        {
+          trainers.push_back(new Trainer(stoi(str)))
+        }
+        delete text_by_lines;
+      }
+      else if (data_type == 3)
+      {
+        WordsFromCase_ = SplitSentence((Text),',');  
         workout_name = (*WordsFromCase_)[0];
         workoutTypeStr=(*WordsFromCase_)[1];
         if (workoutTypeStr == "Anaerobic")
@@ -51,27 +48,28 @@ Studio::Studio(const std::string &configFilePath){
         {
           workout = WorkoutType::MIXED;
         }
-       
         if (workoutTypeStr == "Cardio")
         {
           workout = WorkoutType::CARDIO;
         }       
-       workout_price =  stoi((*WordsFromCase_)[2]); // stoi function convert string to number.
-       
-          workout_options.push_back(Workout(workout_id,workout_name,workout_price,workout));
-          workout_id++;
-          delete WordsFromCase_;
-      }      
+        workout_price =  stoi((*WordsFromCase_)[2]); // stoi function convert string to number.
+        workout_options.push_back(Workout(workoutId,workout_name,workout_price,workout));
+        workoutId++;
+        delete WordsFromCase_;
+      }
     }
-    delete text_by_lines;
+    MyReadFile.close();
 }
 int Studio::getNumOfTrainers() const{
   return  trainers.size();
   
 }
 Trainer* Studio::getTrainer(int tid){
-        return  trainers[tid];
-
+        if (tid < trainers.size())
+        {
+          return trainers[tid];
+        }
+        return nullptr;
     }
 const std::vector<BaseAction*>& Studio::getActionsLog() const{
     return actionsLog;
@@ -84,6 +82,7 @@ std::vector<Workout>& Studio::getWorkoutOptions(){
 void Studio :: start(){
     std::cout<<"The Studio is now open!"<<std::endl;
 }
+
 std::vector<std::string>* Studio::SplitSentence(const std::string &Sentence, char splt )
 {
   std::string line("");
@@ -94,31 +93,21 @@ std::vector<std::string>* Studio::SplitSentence(const std::string &Sentence, cha
         current_char = Sentence[i];
         if (current_char != splt)
         {
-            line.push_back(current_char);            
+          line.push_back(current_char);
         }
         else
         {
-         text_by_lines->push_back(line);
-         line = "";
-         }
-         return text_by_lines;
+          text_by_lines->push_back(line);
+          line="";
+        }
     }
+    return text_by_lines;
 }
+
 Studio::Studio(const Studio &StudioOther){ // probably like operator == but withoiut deletion
-   for (int i = 0; i < trainers.size(); i++)
-    {
-     
-      delete trainers[i];
-    }
     for (int i = 0; i < StudioOther.trainers.size(); i++)
-    {
-     
+    { 
       trainers.push_back(StudioOther.trainers[i]->clone());
-    }
-    for (int i = 0; i < actionsLog.size(); i++)
-    {
-     
-      delete actionsLog[i];
     }
     for (int i = 0; i < StudioOther.actionsLog.size(); i++)
     {
@@ -161,4 +150,42 @@ Studio Studio::operator=(const Studio &StudioOther){ //move constractor
   }
 
 }
+Studio Studio::operator=(const Studio &&StudioOther){ //move assigment
+    if (this == &StudioOther)
+    {
+      return *this;
+    }
+    for (int i = 0; i < trainers.size(); i++)
+    {
+      delete trainers[i];
+    }
+    for (int i = 0; i < StudioOther.trainers.size(); i++)
+    {
+      trainers.push_back(StudioOther.trainers[i]);
+    }
+    for (int i = 0; i < actionsLog.size(); i++)
+    {
+      delete actionsLog[i];
+    }
+    for (int i = 0; i < StudioOther.actionsLog.size(); i++)
+    {
+      actionsLog.push_back(StudioOther.actionsLog[i]);
+    } 
+     workout_options = StudioOther.workout_options;
+    return *this;
+}
+
+Studio::~Studio() 
+{
+  for (Trainer* tr : trainers)
+  {
+      delete tr;
+  }
+  for (BaseAction* ba : actionsLog)
+  {
+    delete ba;
+  }
+  workout_options.clear(); // Might be useless
+}
+
 
