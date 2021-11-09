@@ -47,16 +47,22 @@ void OpenTrainer::act(Studio& studio)
 
 std::string OpenTrainer::toString() const 
 {
-    std::string trainerStatus("closed");
+    std::string ret("Trainer " + trainerId + " status: "); // no idea why this is broken
     if (isOpen)
     {
-        trainerStatus="open";
-    }
-    std::string ret("Trainer " + trainerId + " status: " + trainerStatus + "\nCustomers:\n");
-    for (int i = 0; i <= customers.size(); i++)
-    {
-        ret.append("" + customers[i]->getId() + customers[i]->getName() + "\n");
-    }
+        ret.append("open\n");
+        std::string workouts;
+        for (int i = 0; i <= customers.size(); i++)
+        {
+            ret.append("" + customers[i]->getId() + customers[i]->getName() + "\n");
+            for (&Workout workout : customers[i].)
+        }
     ret.append("Current Trainer's Salary: ");//UNIMPLEMENTED NEED A WAY TO RETURN SALARY
+    }
+    else 
+    {
+        ret.append("closed\n");
+    }
+    
     return ret;
 }
