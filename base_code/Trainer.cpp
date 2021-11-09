@@ -45,7 +45,6 @@ void Trainer::addCustomer(Customer* customer)
     if (customersList.size() < capacity)
         customersList.push_back(customer);
 }
-
 void Trainer::removeCustomer(int id) 
 {
     int pos = 0;
