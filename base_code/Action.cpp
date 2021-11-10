@@ -27,7 +27,8 @@ OpenTrainer::OpenTrainer(int _id, std::vector<Customer*> &customersList):
     BaseAction(), // maybe useless
     trainerId(_id),
     customers(customersList),
-    isOpen(false)
+    isOpen(false),
+    thisStudio()
     {};
 
 void OpenTrainer::act(Studio& studio)

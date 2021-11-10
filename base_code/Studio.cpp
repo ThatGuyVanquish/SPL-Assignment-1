@@ -31,7 +31,7 @@ Studio::Studio(const std::string &configFilePath){
         std::vector<std::string>* text_by_lines = SplitSentence(Text,',');
         for (std::string str : *text_by_lines)
         {
-          trainers.push_back(new Trainer(stoi(str)))
+          trainers.push_back(new Trainer(stoi(str)));
         }
         delete text_by_lines;
       }
@@ -104,7 +104,7 @@ std::vector<std::string>* Studio::SplitSentence(const std::string &Sentence, cha
     return text_by_lines;
 }
 
-Studio::Studio(const Studio &StudioOther){ // probably like operator == but withoiut deletion
+Studio::Studio(const Studio &StudioOther){ // probably like operator == but without deletion
     for (int i = 0; i < StudioOther.trainers.size(); i++)
     { 
       trainers.push_back(StudioOther.trainers[i]->clone());
