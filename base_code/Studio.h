@@ -13,8 +13,8 @@ public:
 	Studio();
     ~Studio();
     Studio(const Studio& StudioOther); //copy constructor
-    Studio(const Studio&& StudioOther); // move constructor
     Studio operator=(const Studio& StudioOther); // copy assignment
+    Studio(const Studio&& StudioOther); // move constructor
     Studio operator=(const Studio&& StudioOther); // move assignment
     Studio(const std::string &configFilePath);
     void start();
@@ -22,7 +22,6 @@ public:
     Trainer* getTrainer(int tid);
 	const std::vector<BaseAction*>& getActionsLog() const; // Return a reference to the history of actions
     std::vector<Workout>& getWorkoutOptions();
-
 private:
     bool open;
     std::vector<Trainer*> trainers;

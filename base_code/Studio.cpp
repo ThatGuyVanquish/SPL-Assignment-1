@@ -17,11 +17,11 @@ Studio::Studio(const std::string &configFilePath){
     int workoutId = 0;
     while (getline(MyReadFile,Text))
     {
-            if (Text.empty())
-      {
+        if (Text.empty())
+        {
         continue;
-      }
-      if (Text[0] == '#')
+        }
+        if (Text[0] == '#')
       {
         data_type++;
       }
@@ -187,5 +187,3 @@ Studio::~Studio()
   }
   workout_options.clear(); // Might be useless
 }
-
-
