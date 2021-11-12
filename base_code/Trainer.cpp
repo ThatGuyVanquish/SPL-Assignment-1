@@ -37,33 +37,33 @@ Trainer& Trainer::operator=(const Trainer& t)
 }
 
 // Move Constructor
-Trainer::Trainer(Trainer&& t):
+Trainer::Trainer(const Trainer&& t):
     capacity(t.capacity),
     open(t.open),
     customersList(),
     orderList(),
     salary(t.salary)
 {
-    t.open = NULL;
+    //t.open = NULL;
     // Move the pairs to new orderList in reverse order (same as pop order), then reverse
     for (int i = t.orderList.size()-1; i--;)
     {
         orderList.push_back(t.orderList[i]);
-        t.orderList.pop_back();
+        //t.orderList.pop_back();
         i++;
     }
     std::reverse(orderList.begin(), orderList.end());
 }
 
 // Move Assignment
-Trainer& Trainer::operator=(Trainer&& t)
+Trainer& Trainer::operator=(const Trainer&& t)
 {
     if (this != &t)
     {
         capacity = t.capacity;
         open = t.open;
         salary = t.salary;
-        t.open = NULL;
+        //t.open = NULL;
         for (Customer* customer : customersList)
         {
             customer = nullptr;
@@ -72,14 +72,14 @@ Trainer& Trainer::operator=(Trainer&& t)
         for (Customer* customer: t.customersList)
         {
             customersList.push_back(customer);
-            t.customersList[i] = nullptr;
+            //t.customersList[i] = nullptr;
             i++;
         }
         orderList.clear();
         for (int i = t.orderList.size()-1; i--;)
         {
             orderList.push_back(t.orderList[i]);
-            t.orderList.pop_back();
+            //t.orderList.pop_back();
             i++;
         }
         std::reverse(orderList.begin(), orderList.end());
