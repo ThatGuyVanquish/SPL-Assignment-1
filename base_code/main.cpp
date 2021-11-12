@@ -77,7 +77,10 @@ int main(int argc, char** argv){
             we gotta perform checks to see if :
             origin trainer exists and his session is open
             destination trainer exists and is open
-            the customer with said id is in origin trainers session, w
+            the customer with said id is in origin trainers session
+            the destination trainer has capacity
+            MoveCustomer currentMove = MoveCustomer::MoveCustomer(from, to, id);
+            currentMove.act(studio);
         }
         */ 
     }
