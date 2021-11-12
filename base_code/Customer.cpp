@@ -18,7 +18,13 @@ int Customer::getId() const
     return id;
 }
 
-// Sweaty Customer Constructor
+/*
+**** Sweaty Customer ****
+Order strategy:
+Orders all of the available cardio workouts, by the order they've been received in the config file.
+*/
+
+// Constructor
 SweatyCustomer::SweatyCustomer(std::string name, int id): 
     Customer::Customer(name, id)
     {};
@@ -36,7 +42,18 @@ std::vector<int> SweatyCustomer::order(const std::vector<Workout>& workoutOption
     return wrk;
 }
 
-// Cheap Customer Constructor
+std::string SweatyCustomer::toString() const
+{
+    return getId() + " " + getName();
+}
+
+/*
+**** Cheap Customer ****
+Order strategy:
+Orders cheapest workout available.
+*/
+
+// Constructor
 CheapCustomer::CheapCustomer(std::string name, int id): 
     Customer::Customer(name, id)
 {};
@@ -56,7 +73,18 @@ std::vector<int> CheapCustomer::order(const std::vector<Workout>& workoutOptions
     return vector<int>(minId);
 }
 
-// Heavy Muscle Customer Constructor
+std::string CheapCustomer::toString() const
+{
+    return getId() + " " + getName();
+}
+
+/*
+**** Heavy Muscle Customer ****
+Order strategy:
+Anaerobic workouts from most expensive to cheapest.
+*/
+
+//  Constructor
 HeavyMuscleCustomer::HeavyMuscleCustomer(std::string name, int id): 
     Customer::Customer(name, id)
 {};
@@ -94,7 +122,21 @@ bool compareAnae(Workout w1, Workout w2)
     return false;;
 }
 
-// Full Body Customer Constructor
+std::string HeavyMuscleCustomer::toString() const
+{
+    return getId() + " " + getName();
+}
+
+
+/*
+**** Full Body Customer ****
+Order strategy:
+1. Cheapest cardio
+2. Most expensive mixed
+3. Cheapest anaerobic
+*/
+
+// Constructor
 FullBodyCustomer::FullBodyCustomer(std::string name, int id): 
     Customer::Customer(name, id)
 {};
@@ -151,4 +193,9 @@ std::vector<int> FullBodyCustomer::order(const std::vector<Workout>& workoutOpti
     }
     std::vector<int> ret = {cardioId, mixId, anaeId};
     return ret;
+}
+
+std::string FullBodyCustomer::toString() const
+{
+    return getId() + " " + getName();
 }
