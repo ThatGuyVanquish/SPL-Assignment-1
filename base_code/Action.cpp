@@ -23,8 +23,13 @@ void BaseAction::error(std::string err)
     cout<<errorMsg<<endl;
 }
 
+std::string BaseAction::getErrorMsg() const
+{
+    return errorMsg;
+}
+
 OpenTrainer::OpenTrainer(int _id, std::vector<Customer*> &customersList):
-    BaseAction(), // maybe useless
+    BaseAction(),
     trainerId(_id),
     customers(customersList),
     isOpen(false),
