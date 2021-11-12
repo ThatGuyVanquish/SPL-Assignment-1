@@ -129,18 +129,6 @@ std::vector<OrderPair>& Trainer::getOrders()
     return orderList;
 }
 
-// void Trainer::order(const int customer_id, const std::vector<int> workout_ids, const std::vector<Workout>& workout_options):{};
-
-void Trainer::openTrainer() 
-{
-    open = true;
-}
-
-void Trainer::closeTrainer() 
-{
-    open = false;
-}
-
 int Trainer::getSalary() 
 {
     for (OrderPair& order : orderList) 
@@ -153,4 +141,16 @@ int Trainer::getSalary()
 bool Trainer::isOpen() 
 {
     return open;
+}
+
+// void Trainer::order(const int customer_id, const std::vector<int> workout_ids, const std::vector<Workout>& workout_options):{};
+
+void Trainer::openTrainer() 
+{
+    open = true;
+}
+
+void Trainer::closeTrainer() 
+{
+    open = false;
 }
