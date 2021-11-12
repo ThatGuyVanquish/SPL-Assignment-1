@@ -16,16 +16,17 @@ public:
     Trainer& operator=(const Trainer&& t);
     ~Trainer();
     int getCapacity() const;
-    void addCustomer(Customer* customer);
-    void removeCustomer(int id);
     Customer* getCustomer(int id);
     std::vector<Customer*>& getCustomers();
     std::vector<OrderPair>& getOrders();
+    void calcSalary();
+    int getSalary();
+    bool isOpen();
+    void addCustomer(Customer* customer);
+    void removeCustomer(int id);
     void order(const int customer_id, const std::vector<int> workout_ids, const std::vector<Workout>& workout_options);
     void openTrainer();
     void closeTrainer();
-    int getSalary();
-    bool isOpen();
 private:
     int capacity;
     bool open;

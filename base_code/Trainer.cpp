@@ -87,16 +87,61 @@ Trainer& Trainer::operator=(const Trainer&& t)
     return *this;
 }
 
+Trainer::~Trainer()
+{
+    open = NULL;
+    salary = 0;
+    capacity = 0;
+    customersList.clear();
+    orderList.clear();
+}
+
 int Trainer::getCapacity() const 
     {
         return capacity;
     }
 
+Customer* Trainer::getCustomer(int id)
+{
+    for (Customer*& c : customersList)
+        if (c->getId() == id)
+            return c;
+    return nullptr;
+}
+
+std::vector<Customer*>& Trainer::getCustomers() 
+{
+    return customersList;
+}
+
+std::vector<OrderPair>& Trainer::getOrders() 
+{
+    return orderList;
+}
+
+void Trainer::calcSalary() 
+{
+    for (OrderPair& order : orderList) 
+    {
+        salary += order.second.getPrice();
+    }
+}
+
+int Trainer::getSalary()
+{
+    return salary;
+}
+
+bool Trainer::isOpen() 
+{
+    return open;
+}
+
 void Trainer::addCustomer(Customer* customer) 
 {
-    if (customersList.size() < capacity)
-        customersList.push_back(customer);
+    customersList.push_back(customer);
 }
+
 void Trainer::removeCustomer(int id) 
 {
     int pos = 0;
@@ -112,38 +157,13 @@ void Trainer::removeCustomer(int id)
     }
 }
 
-Customer* Trainer::getCustomer(int id)
+void Trainer::order(const int customer_id, const std::vector<int> workout_ids, const std::vector<Workout>& workout_options)
 {
-    for (Customer*& c : customersList)
-        if (c->getId() == id)
-            return c;
-}
-
-std::vector<Customer*>& Trainer::getCustomers() 
-{
-    return customersList;
-}
-
-std::vector<OrderPair>& Trainer::getOrders() 
-{
-    return orderList;
-}
-
-int Trainer::getSalary() 
-{
-    for (OrderPair& order : orderList) 
+    for (int workout : workout_ids)
     {
-        salary += order.second.getPrice();
+        orderList.push_back(OrderPair(customer_id, workout_options[workout]));
     }
-    return salary;
 }
-
-bool Trainer::isOpen() 
-{
-    return open;
-}
-
-// void Trainer::order(const int customer_id, const std::vector<int> workout_ids, const std::vector<Workout>& workout_options):{};
 
 void Trainer::openTrainer() 
 {
