@@ -3,13 +3,18 @@
 
 using namespace std;
 
+// Constructor
 Workout::Workout(int w_id, std::string w_name, int w_price, WorkoutType w_type):
     id(w_id), 
     name(w_name), 
     price(w_price), 
     type(w_type)
-    {}; // Constructor
-    
+    {}; 
+
+/*
+**** Getters ****
+*/
+
 int Workout::getId() const {
     return id;
 };
