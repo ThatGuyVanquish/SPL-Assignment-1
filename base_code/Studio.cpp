@@ -2,10 +2,8 @@
 #include <iostream>
 #include <fstream>
 using namespace std;
-Studio::Studio(){
-
-}
-Studio::Studio(const std::string &configFilePath){  
+Studio::Studio(){} // Empty constructor
+Studio::Studio(const std::string &configFilePath){  // Constructor with filepath
     string Text;
     ifstream MyReadFile(configFilePath);
     int data_type = 0; 
@@ -60,51 +58,8 @@ Studio::Studio(const std::string &configFilePath){
     }
     MyReadFile.close();
 }
-int Studio::getNumOfTrainers() const{
-  return  trainers.size();
-  
-}
-Trainer* Studio::getTrainer(int tid){
-        if (tid < trainers.size())
-        {
-          return trainers[tid];
-        }
-        return nullptr;
-    }
-const std::vector<BaseAction*>& Studio::getActionsLog() const{
-    return actionsLog;
-    } // Return a reference to the history of actions  	
-std::vector<Workout>& Studio::getWorkoutOptions(){
-    return  workout_options;
-    }    
 
-
-void Studio :: start(){
-    std::cout<<"The Studio is now open!"<<std::endl;
-}
-
-std::vector<std::string>* Studio::SplitSentence(const std::string &Sentence, char splt )
-{
-  std::string line("");
-  std::vector<std::string>* text_by_lines = new std::vector<std::string>();   
-    char current_char;
-  for (int i = 0; i < Sentence.size(); i++)
-    {
-        current_char = Sentence[i];
-        if (current_char != splt)
-        {
-          line.push_back(current_char);
-        }
-        else
-        {
-          text_by_lines->push_back(line);
-          line="";
-        }
-    }
-    return text_by_lines;
-}
-
-Studio::Studio(const Studio &StudioOther){ // probably like operator == but without deletion
+Studio::Studio(const Studio &StudioOther){ // probably like operator == but without deletion -Nave: is this our copy constructor?
     for (int i = 0; i < StudioOther.trainers.size(); i++)
     { 
       trainers.push_back(StudioOther.trainers[i]->clone());
@@ -115,10 +70,9 @@ Studio::Studio(const Studio &StudioOther){ // probably like operator == but with
       actionsLog.push_back(StudioOther.actionsLog[i]->clone());
     } 
      workout_options = StudioOther.workout_options;
-
-
 }
-Studio Studio::operator=(const Studio &StudioOther){ //move constractor
+
+Studio Studio::operator=(const Studio &StudioOther){ //move constructor -Nave: this is not a move constructor, maybe copy (no &&StudioOther - double ampersand)
   if( this == &StudioOther)
   { //self assgiment
     return *this;
@@ -186,4 +140,53 @@ Studio::~Studio()
     delete ba;
   }
   workout_options.clear(); // Might be useless
+}
+
+
+int Studio::getNumOfTrainers() const{
+  return  trainers.size();
+  
+}
+Trainer* Studio::getTrainer(int tid){
+        if (tid < trainers.size())
+        {
+          return trainers[tid];
+        }
+        return nullptr;
+    }
+
+const std::vector<BaseAction*>& Studio::getActionsLog() const
+{
+    return actionsLog;
+} // Return a reference to the history of actions  
+
+std::vector<Workout>& Studio::getWorkoutOptions()
+{
+    return  workout_options;
+}    
+
+void Studio :: start()
+{
+    std::cout<<"The Studio is now open!"<<std::endl;
+}
+
+std::vector<std::string>* Studio::SplitSentence(const std::string &Sentence, char splt )
+{
+  std::string line("");
+  std::vector<std::string>* text_by_lines = new std::vector<std::string>();   
+    char current_char;
+  for (int i = 0; i < Sentence.size(); i++)
+    {
+        current_char = Sentence[i];
+        if (current_char != splt)
+        {
+          line.push_back(current_char);
+        }
+        else
+        {
+          text_by_lines->push_back(line);
+          line="";
+        }
+    }
+    return text_by_lines;
 }
