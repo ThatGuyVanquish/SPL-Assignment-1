@@ -1,8 +1,9 @@
 #include "Trainer.h"
+#include <bits/stdc++.h>
 
 using namespace std;
 
-//Trainer Constructor
+// Constructor
 Trainer::Trainer(int t_capacity): 
     capacity(t_capacity),
     open(false),
@@ -10,7 +11,7 @@ Trainer::Trainer(int t_capacity):
     orderList()
     {};
 
-//Trainer Copy Constructor
+// Copy Constructor
 Trainer::Trainer(const Trainer& t):
     capacity(t.capacity), 
     open(t.open),
@@ -19,7 +20,7 @@ Trainer::Trainer(const Trainer& t):
     salary(0)
     {};
 
-//Trainer Copy Assignment
+// Copy Assignment
 Trainer& Trainer::operator=(const Trainer& t)
 {
     if (this!= &t)
@@ -30,9 +31,60 @@ Trainer& Trainer::operator=(const Trainer& t)
             delete customer;
         customersList.clear();
         for (Customer* customer : t.customersList)
-            customersList.push_back(customer->clone());
+            customersList.push_back(customer);
         orderList = t.orderList;
     }
+}
+
+// Move Constructor
+Trainer::Trainer(Trainer&& t):
+    capacity(t.capacity),
+    open(t.open),
+    customersList(),
+    orderList(),
+    salary(t.salary)
+{
+    t.open = NULL;
+    // Move the pairs to new orderList in reverse order (same as pop order), then reverse
+    for (int i = t.orderList.size()-1; i--;)
+    {
+        orderList.push_back(t.orderList[i]);
+        t.orderList.pop_back();
+        i++;
+    }
+    std::reverse(orderList.begin(), orderList.end());
+}
+
+// Move Assignment
+Trainer& Trainer::operator=(Trainer&& t)
+{
+    if (this != &t)
+    {
+        capacity = t.capacity;
+        open = t.open;
+        salary = t.salary;
+        t.open = NULL;
+        for (Customer* customer : customersList)
+        {
+            customer = nullptr;
+        }
+        int i = 0;
+        for (Customer* customer: t.customersList)
+        {
+            customersList.push_back(customer);
+            t.customersList[i] = nullptr;
+            i++;
+        }
+        orderList.clear();
+        for (int i = t.orderList.size()-1; i--;)
+        {
+            orderList.push_back(t.orderList[i]);
+            t.orderList.pop_back();
+            i++;
+        }
+        std::reverse(orderList.begin(), orderList.end());
+    }
+    return *this;
 }
 
 int Trainer::getCapacity() const 
