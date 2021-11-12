@@ -95,7 +95,7 @@ std::vector<int> HeavyMuscleCustomer::order(const std::vector<Workout>& workoutO
     std::vector<Workout> wrkCOpy(workoutOptions);
     std::sort(wrkCOpy.begin(), wrkCOpy.end(), compareAnae);
     for (Workout workout : wrkCOpy)
-    {
+    { // Might be able to use else to break for loop if we created the comparator properly.
         if (workout.getType() == ANAEROBIC)
         {
             wrk.push_back(workout.getId());
@@ -149,7 +149,9 @@ std::vector<int> FullBodyCustomer::order(const std::vector<Workout>& workoutOpti
     int cardioMin;
     int mixId = -1;
     int mixMax;
-    for (Workout workout : workoutOptions)
+    // Iterating through workoutOptions once to figure out all 3 workouts.
+    // A sorted workoutOptions vector would've made this faster in practice, but not in theory.
+    for (Workout workout : workoutOptions) 
     {
         if (workout.getType() == ANAEROBIC)
         {
