@@ -62,6 +62,7 @@ void OpenTrainer::act(Studio& studio)
         {
             trainer->addCustomer(customer);
         }
+        complete();
     }
 }
 
@@ -87,6 +88,7 @@ void Order::act(Studio& studio)
             cout<<customer->getName() + " is doing " + studio.getWorkoutOptions()[i].getName()<< endl;
         }
     }
+    complete(); // check if need to implement error checking
 }
 
 std::string Order::toString() const
