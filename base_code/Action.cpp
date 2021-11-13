@@ -67,28 +67,8 @@ void OpenTrainer::act(Studio& studio)
 
 std::string OpenTrainer::toString() const 
 {
-    // std::string ret("Trainer " + trainerId); // no idea why this is broken
-    // ret.append(" status: ");
-    // if (isOpen)
-    // {
-    //     ret.append("open\n");
-    //     std::string workouts;
-    //     for (Customer* customer : customers)
-    //     {
-    //         ret.append("" + customer->getId() + customer->getName() + "\n");
-    //         for (Workout workout : thisStudio.getWorkoutOptions())
-    //         {
-                
-    //         }
-    //     }
-    // ret.append("Current Trainer's Salary: ");//UNIMPLEMENTED NEED A WAY TO RETURN SALARY
-    // }
-    // else 
-    // {
-    //     ret.append("closed\n");
-    // }
-    
-    // return ret;
+    // don't have to return anything really so:
+    return "something";
 }
 
 Order::Order(int id):
@@ -107,7 +87,6 @@ void Order::act(Studio& studio)
             cout<<customer->getName() + " is doing " + studio.getWorkoutOptions()[i].getName()<< endl;
         }
     }
-    trainer -> calcSalary();
 }
 
 std::string Order::toString() const
