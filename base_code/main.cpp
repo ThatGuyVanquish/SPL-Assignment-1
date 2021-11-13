@@ -15,11 +15,15 @@ int main(int argc, char** argv){
     studio.start();
     int id = 0;
     while (true) //input loop
-    {
+    {/*
         //receive input and separate into input vector by spaces
-        /*
+        
         if (input[0] == "open") 
         {
+            if (not canOpen(input[1], input.size()-2))
+            {
+                create OpenTrainer object that would give an error that we cant open and break
+            }
             vector<Customer*> customers;
             for(int i = 2; i < input.size(); i++)
             {
@@ -57,9 +61,8 @@ int main(int argc, char** argv){
                     customers.push_back(*(FullBodyCustomer::FullBodyCustomer(name, id)));
                     id++;
                 }
-                customers.push_back(*(Customer(input[i], )))
             }
-            OpenTrainer currentTrainer = OpenTrainer::OpenTrainer(input[1], customers);
+            OpenTrainer currentTrainer = OpenTrainer(input[1], customers);
             currentTrainer.act(studio);
         }
         if (input[0] == "order")
@@ -82,7 +85,7 @@ int main(int argc, char** argv){
             MoveCustomer currentMove = MoveCustomer::MoveCustomer(from, to, id);
             currentMove.act(studio);
         }
-        */ 
+        */
     }
 
     if(backup!=nullptr){
