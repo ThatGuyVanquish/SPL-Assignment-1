@@ -59,7 +59,7 @@ Studio::Studio(const std::string &configFilePath){  // Constructor with filepath
     MyReadFile.close();
 }
 
-Studio::Studio(const Studio &StudioOther){ // probably like operator == but without deletion -Nave: is this our copy constructor?
+Studio::Studio(const Studio &StudioOther){ // Copy Constructor
     for (int i = 0; i < StudioOther.trainers.size(); i++)
     { 
       trainers.push_back(StudioOther.trainers[i]->clone());
@@ -87,7 +87,7 @@ Studio Studio::operator=(const Studio &StudioOther){ // Copy assignment
     for (int i = 0; i < StudioOther.trainers.size(); i++)
     {
      
-      trainers.push_back(StudioOther.trainers[i]);
+      trainers.push_back(StudioOther.trainers[i]->clone());
     }
     for (int i = 0; i < actionsLog.size(); i++)
     {
@@ -97,14 +97,27 @@ Studio Studio::operator=(const Studio &StudioOther){ // Copy assignment
     for (int i = 0; i < StudioOther.actionsLog.size(); i++)
     {
      
-      actionsLog.push_back(StudioOther.actionsLog[i]);
+      actionsLog.push_back(StudioOther.actionsLog[i]->clone());
     } 
      workout_options = StudioOther.workout_options;
     
   }
 
 }
-Studio Studio::operator=(const Studio &&StudioOther){ //move assigment
+
+Studio::Studio(const Studio &&StudioOther){ // Move Constructor
+    for (int i = 0; i < StudioOther.trainers.size(); i++)
+    { 
+      trainers.push_back(StudioOther.trainers[i]); // not sure we need clone because this is an rvalue ref
+    }
+    for (int i = 0; i < StudioOther.actionsLog.size(); i++)
+    {
+      actionsLog.push_back(StudioOther.actionsLog[i]); // not sure we need clone because this is an rvalue ref
+    } 
+     workout_options = StudioOther.workout_options;
+}
+
+Studio Studio::operator=(const Studio &&StudioOther){ // Move assigment
     if (this == &StudioOther)
     {
       return *this;
@@ -115,7 +128,7 @@ Studio Studio::operator=(const Studio &&StudioOther){ //move assigment
     }
     for (int i = 0; i < StudioOther.trainers.size(); i++)
     {
-      trainers.push_back(StudioOther.trainers[i]);
+      trainers.push_back(StudioOther.trainers[i]); // not sure we need clone because this is an rvalue ref
     }
     for (int i = 0; i < actionsLog.size(); i++)
     {
@@ -123,7 +136,7 @@ Studio Studio::operator=(const Studio &&StudioOther){ //move assigment
     }
     for (int i = 0; i < StudioOther.actionsLog.size(); i++)
     {
-      actionsLog.push_back(StudioOther.actionsLog[i]);
+      actionsLog.push_back(StudioOther.actionsLog[i]); // not sure we need clone because this is an rvalue ref
     } 
      workout_options = StudioOther.workout_options;
     return *this;
@@ -194,4 +207,84 @@ std::vector<std::string>* Studio::SplitSentence(const std::string &Sentence, cha
 bool Studio::canOpen(int tid, int numOfCustomers)
 {
     return (tid < trainers.size() && not trainers[tid]->isOpen() && trainers[tid]->getCapacity()-(trainers[tid]->getCustomers()).size() > numOfCustomers);
+}
+
+void Studio::start()
+{
+  //while true until closeall
+  //nt id = 0;
+    //while (true) //input loop
+    {/*
+        //receive input and separate into input vector by spaces
+        
+        if (input[0] == "open") 
+        {
+            if (not canOpen(input[1], input.size()-2))
+            {
+                create OpenTrainer object that would give an error that we cant open and break
+            }
+            opentrainer some method to store the string of "input"
+            vector<Customer*> customers;
+            for(int i = 2; i < input.size(); i++)
+            {
+                std::string name;
+                std::string type;
+                std::string gotLine;
+                while (getline(input[i], gotLine, ',')
+                {
+                    if (not name)
+                    {
+                        name(&gotLine);
+                    }
+                    else
+                    {
+                        type(&gotLine);
+                    }
+                }
+                if (type == "swt")
+                {
+                    customers.push_back(*(SweatyCustomer::SweatyCustomer(name, id)));
+                    id++;
+                }
+                if (type == "chp")
+                {
+                    customers.push_back(*(CheapCustomer::CheapCustomer(name, id)));
+                    id++;
+                }
+                if (type == "mcl")
+                {
+                    customers.push_back(*(HeavyMuscleCustomer::HeavyMuscleCustomer(name, id)));
+                    id++;
+                }
+                if (type == "fbc")
+                {
+                    customers.push_back(*(FullBodyCustomer::FullBodyCustomer(name, id)));
+                    id++;
+                }
+            }
+            OpenTrainer currentTrainer = OpenTrainer(input[1], customers);
+            currentTrainer.act(studio);
+            actionsLog.push_back(*currentTrainer);
+        }
+        if (input[0] == "order")
+        {
+            int id = std::stoi(input[1]);
+            Order currentOrder = Order::Order(id);
+            currentOrder.act(studio);
+            maybe a print order here if we move the print from act to toString
+        } 
+        if (input[0] == "move")
+        {
+            int from = input[1];
+            int to = input[2];
+            int id = input[3];
+            we gotta perform checks to see if :
+            origin trainer exists and his session is open
+            destination trainer exists and is open
+            the customer with said id is in origin trainers session
+            the destination trainer has capacity
+            MoveCustomer currentMove = MoveCustomer::MoveCustomer(from, to, id);
+            currentMove.act(studio);
+        }
+        */
 }
