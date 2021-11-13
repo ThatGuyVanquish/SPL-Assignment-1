@@ -72,8 +72,8 @@ Studio::Studio(const Studio &StudioOther){ // probably like operator == but with
      workout_options = StudioOther.workout_options;
 }
 
-Studio Studio::operator=(const Studio &StudioOther){ //move constructor -Nave: this is not a move constructor, maybe copy (no &&StudioOther - double ampersand)
-  if( this == &StudioOther)
+Studio Studio::operator=(const Studio &StudioOther){ // Copy assignment
+  if(this == &StudioOther)
   { //self assgiment
     return *this;
   }
@@ -87,7 +87,7 @@ Studio Studio::operator=(const Studio &StudioOther){ //move constructor -Nave: t
     for (int i = 0; i < StudioOther.trainers.size(); i++)
     {
      
-      trainers.push_back(StudioOther.trainers[i]->clone());
+      trainers.push_back(StudioOther.trainers[i]);
     }
     for (int i = 0; i < actionsLog.size(); i++)
     {
@@ -97,7 +97,7 @@ Studio Studio::operator=(const Studio &StudioOther){ //move constructor -Nave: t
     for (int i = 0; i < StudioOther.actionsLog.size(); i++)
     {
      
-      actionsLog.push_back(StudioOther.actionsLog[i]->clone());
+      actionsLog.push_back(StudioOther.actionsLog[i]);
     } 
      workout_options = StudioOther.workout_options;
     
@@ -193,5 +193,5 @@ std::vector<std::string>* Studio::SplitSentence(const std::string &Sentence, cha
 
 bool Studio::canOpen(int tid, int numOfCustomers)
 {
-    return (tid < trainers.size() and not trainers[tid]->isOpen() and trainers[tid]->getCapacity()-(trainers[tid]->getCustomers()).size() > numOfCustomers);
+    return (tid < trainers.size() && not trainers[tid]->isOpen() && trainers[tid]->getCapacity()-(trainers[tid]->getCustomers()).size() > numOfCustomers);
 }
