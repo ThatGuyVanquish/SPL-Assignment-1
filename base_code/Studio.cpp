@@ -190,3 +190,8 @@ std::vector<std::string>* Studio::SplitSentence(const std::string &Sentence, cha
     }
     return text_by_lines;
 }
+
+bool Studio::canOpen(int tid, int numOfCustomers)
+{
+    return (tid < trainers.size() and not trainers[tid]->isOpen() and trainers[tid]->getCapacity()-(trainers[tid]->getCustomers()).size() > numOfCustomers);
+}

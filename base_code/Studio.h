@@ -22,6 +22,7 @@ public:
     Trainer* getTrainer(int tid);
 	const std::vector<BaseAction*>& getActionsLog() const; // Return a reference to the history of actions
     std::vector<Workout>& getWorkoutOptions();
+    bool canOpen(int tid, int numOfCustomers);
 private:
     bool open;
     std::vector<Trainer*> trainers;
