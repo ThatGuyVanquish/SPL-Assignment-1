@@ -24,6 +24,7 @@ int main(int argc, char** argv){
             {
                 create OpenTrainer object that would give an error that we cant open and break
             }
+            opentrainer some method to store the string of "input"
             vector<Customer*> customers;
             for(int i = 2; i < input.size(); i++)
             {
@@ -64,6 +65,7 @@ int main(int argc, char** argv){
             }
             OpenTrainer currentTrainer = OpenTrainer(input[1], customers);
             currentTrainer.act(studio);
+            actionsLog.push_back(*currentTrainer);
         }
         if (input[0] == "order")
         {
