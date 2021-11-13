@@ -94,6 +94,10 @@ Trainer::~Trainer()
     open = NULL;
     salary = 0;
     capacity = 0;
+    for (Customer* customer : customersList)
+    {
+        delete customer;
+    }
     customersList.clear();
     orderList.clear();
 }
@@ -136,12 +140,12 @@ void Trainer::addOrder(OrderPair& order) // Might need to make it pass by value
     orderList.push_back(order);
 }
 
-int Trainer::getSalary()
+int Trainer::getSalary() const
 {
     return salary;
 }
 
-bool Trainer::isOpen() 
+bool Trainer::isOpen() const
 {
     return open;
 }
@@ -170,7 +174,8 @@ void Trainer::order(const int customer_id, const std::vector<int> workout_ids, c
 {
     for (int workout : workout_ids)
     {
-        orderList.push_back(OrderPair(customer_id, workout_options[workout]));
+        OrderPair temp(customer_id, workout_options[workout]);
+        addOrder(temp);
     }
 }
 

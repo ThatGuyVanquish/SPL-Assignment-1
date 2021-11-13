@@ -19,10 +19,10 @@ public:
     Customer* getCustomer(int id);
     std::vector<Customer*>& getCustomers();
     std::vector<OrderPair>& getOrders();
-    int getSalary();
+    int getSalary() const;
     void Trainer::removeOrders(int start, int end);
     void Trainer::addOrder(OrderPair& order);
-    bool isOpen();
+    bool isOpen() const;
     void addCustomer(Customer* customer);
     void removeCustomer(int id);
     void order(const int customer_id, const std::vector<int> workout_ids, const std::vector<Workout>& workout_options);
