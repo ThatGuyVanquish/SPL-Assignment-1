@@ -19,7 +19,6 @@ public:
     Customer* getCustomer(int id);
     std::vector<Customer*>& getCustomers();
     std::vector<OrderPair>& getOrders();
-    void calcSalary();
     int getSalary();
     void Trainer::removeOrders(int start, int end);
     void Trainer::addOrder(OrderPair& order);

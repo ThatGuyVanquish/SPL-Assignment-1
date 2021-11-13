@@ -121,14 +121,6 @@ std::vector<OrderPair>& Trainer::getOrders()
     return orderList;
 }
 
-void Trainer::calcSalary()
-{
-    for (OrderPair& order : orderList) 
-    {
-        salary += order.second.getPrice();
-    }
-}
-
 void Trainer::removeOrders(int start, int end)
 {
     for (int i = start; i <= end; i++)
@@ -140,6 +132,7 @@ void Trainer::removeOrders(int start, int end)
 
 void Trainer::addOrder(OrderPair& order) // Might need to make it pass by value
 {
+    salary = salary + order.second.getPrice();
     orderList.push_back(order);
 }
 

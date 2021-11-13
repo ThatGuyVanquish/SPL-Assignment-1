@@ -144,25 +144,14 @@ void MoveCustomer::act(Studio& studio)
                 }
                 nextTrainer->addOrder(order);
             }
-            if (stop)
+            else if (stop)
             {
-                nextTrainer->calcSalary(); // probably not going to work because recalculate current workouts
                 currTrainer->removeOrders(start, end);
                 break;
             }
             end++;
         }
-        /*
-            We need to:
-            A. Move the workouts that customer (id) has stored in souce trainer's
-            orderList by OrderPairs to the destination trainer
-            B. During this, $$$$ if we need to store an accumulative salary
-            then create another function to calculate negation of removed
-            activities, maybe do that anyways and comment it out for now
-            then delete if unnecessary (and 0 salary each time calcSalary is called)
-            or uncomment it if it is necessary.
-            C. Move the customer to the destination trainer's customerList
-            D. Calculate the destination trainer's salary
-        */
+        nextTrainer->addCustomer(currTrainer->getCustomer(id));
+        currTrainer->removeCustomer(id);
     }
 }
