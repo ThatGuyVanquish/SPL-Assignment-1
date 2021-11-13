@@ -127,6 +127,20 @@ void Trainer::calcSalary()
     }
 }
 
+void Trainer::removeOrders(int start, int end)
+{
+    for (int i = start; i <= end; i++)
+    {
+        salary = salary - orderList[i].second.getPrice();
+    }
+    orderList.erase(orderList.begin()+start, orderList.begin()+end);
+}
+
+void Trainer::addOrder(OrderPair& order) // Might need to make it pass by value
+{
+    orderList.push_back(order);
+}
+
 int Trainer::getSalary()
 {
     return salary;
