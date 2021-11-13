@@ -1,5 +1,5 @@
 #include "Trainer.h"
-#include <bits/stdc++.h>
+#include <algorithm>
 
 using namespace std;
 
@@ -12,13 +12,18 @@ Trainer::Trainer(int t_capacity):
     {};
 
 // Copy Constructor
-Trainer::Trainer(const Trainer& t):
+Trainer::Trainer(const Trainer& t): 
     capacity(t.capacity), 
     open(t.open),
-    customersList(t.customersList),
+    customersList(),
     orderList(t.orderList),
     salary(0)
-    {};
+    {
+        for (Customer* customer : t.customersList)
+        {
+            customersList.push_back(customer->clone());
+        }
+    };
 
 // Copy Assignment
 Trainer& Trainer::operator=(const Trainer& t)
@@ -31,7 +36,7 @@ Trainer& Trainer::operator=(const Trainer& t)
             delete customer;
         customersList.clear();
         for (Customer* customer : t.customersList)
-            customersList.push_back(customer);
+            customersList.push_back(customer->clone());
         orderList = t.orderList;
     }
 }
@@ -52,7 +57,7 @@ Trainer::Trainer(const Trainer&& t):
         //t.orderList.pop_back();
         i++;
     }
-    std::reverse(orderList.begin(), orderList.end());
+    std::reverse(orderList.begin(), orderList.end()); //why? where are they?
 }
 
 // Move Assignment
@@ -63,26 +68,23 @@ Trainer& Trainer::operator=(const Trainer&& t)
         capacity = t.capacity;
         open = t.open;
         salary = t.salary;
-        //t.open = NULL;
         for (Customer* customer : customersList)
         {
-            customer = nullptr;
+            delete customer;
         }
         int i = 0;
         for (Customer* customer: t.customersList)
         {
             customersList.push_back(customer);
-            //t.customersList[i] = nullptr;
             i++;
         }
         orderList.clear();
         for (int i = t.orderList.size()-1; i--;)
         {
             orderList.push_back(t.orderList[i]);
-            //t.orderList.pop_back();
             i++;
         }
-        std::reverse(orderList.begin(), orderList.end());
+        std::reverse(orderList.begin(), orderList.end()); // why?!?!?!?!
     }
     return *this;
 }
@@ -119,7 +121,7 @@ std::vector<OrderPair>& Trainer::getOrders()
     return orderList;
 }
 
-void Trainer::calcSalary() 
+void Trainer::calcSalary()
 {
     for (OrderPair& order : orderList) 
     {
