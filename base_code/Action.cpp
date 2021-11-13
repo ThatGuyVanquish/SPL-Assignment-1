@@ -38,17 +38,21 @@ OpenTrainer::OpenTrainer(int _id, std::vector<Customer*> &customersList):
 void OpenTrainer::act(Studio& studio)
 {  
     Trainer* trainer = studio.getTrainer(trainerId);
-    if (trainer == nullptr || trainer -> isOpen())
+    if (trainer == nullptr or trainer->isOpen())
     {
         error("Workout session does not exist or is already open.");
     }
+    else if (trainer->getCapacity()-(trainer->getCustomers()).size() < customers.size())
+    {
+        error("Trainer is in full capacity and can't hold the requested customer(s).");
+    }
     else
     {
-        trainer -> openTrainer();
+        trainer->openTrainer();
         isOpen = true;
         for (Customer* customer : customers)
         {
-            trainer -> addCustomer(customer);
+            trainer->addCustomer(customer);
         }
     }
 }
@@ -118,6 +122,28 @@ void MoveCustomer::act(Studio& studio)
     (nextTrainer->getCustomers()).size() < nextTrainer->getCapacity() and // Destination has room for customers
     currTrainer->getCustomer(id) != nullptr) // Customer exists in source trainer's list
     {
+        bool stop = false; // Boolean to break order loop after completing the customer's orders
+        int start = 0; // Indices to erase from currTrainer's orderList
+        int end = 0;
+        for (OrderPair order : currTrainer->getOrders())
+        {
+            if (order.first == id)
+            {
+                if (not stop) // Keeping current end index as start index
+                {
+                    start = end;
+                    stop = true;
+                }
+                nextTrainer->addOrder(order);
+            }
+            if (stop)
+            {
+                nextTrainer->calcSalary();
+                currTrainer->removeOrders(start, end);
+                break;
+            }
+            end++;
+        }
         /*
             We need to:
             A. Move the workouts that customer (id) has stored in souce trainer's
