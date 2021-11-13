@@ -33,7 +33,15 @@ OpenTrainer::OpenTrainer(int _id, std::vector<Customer*> &customersList):
     trainerId(_id),
     customers(customersList),
     isOpen(false)
-    {};
+    {
+        //calledAction = getInput();
+    };
+
+/*
+std::string BaseAction::getInput(input) {
+
+}
+*/
 
 void OpenTrainer::act(Studio& studio)
 {  
@@ -104,7 +112,7 @@ void Order::act(Studio& studio)
 
 std::string Order::toString() const
 {
-    // no idea what to return here
+    return "hakuna matata";
 }
 
 MoveCustomer::MoveCustomer(int src, int dst, int customerId):
@@ -138,7 +146,7 @@ void MoveCustomer::act(Studio& studio)
             }
             if (stop)
             {
-                nextTrainer->calcSalary();
+                nextTrainer->calcSalary(); // probably not going to work because recalculate current workouts
                 currTrainer->removeOrders(start, end);
                 break;
             }

@@ -25,6 +25,7 @@ protected:
 private:
     std::string errorMsg;
     ActionStatus status;
+    //std::string calledAction;
 };
 
 
