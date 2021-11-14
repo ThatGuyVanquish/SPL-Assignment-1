@@ -18,6 +18,24 @@ int Customer::getId() const
     return id;
 }
 
+bool compareAnae(Workout w1, Workout w2)
+{
+    if (w1.getType() == ANAEROBIC)
+    {
+        if (w2.getType() != ANAEROBIC)
+            return false;
+        else
+        {
+            return w1.getPrice() < w2.getPrice();
+        }
+    }
+    else if (w2.getType() == ANAEROBIC)
+    {
+        return true;
+    }
+    return false;;
+}
+
 /*
 **** Sweaty Customer ****
 Order strategy:
@@ -117,24 +135,6 @@ std::vector<int> HeavyMuscleCustomer::order(const std::vector<Workout>& workoutO
         }
     }
     return wrk;
-}
-
-bool compareAnae(Workout w1, Workout w2)
-{
-    if (w1.getType() == ANAEROBIC)
-    {
-        if (w2.getType() != ANAEROBIC)
-            return false;
-        else
-        {
-            return w1.getPrice() < w2.getPrice();
-        }
-    }
-    else if (w2.getType() == ANAEROBIC)
-    {
-        return true;
-    }
-    return false;;
 }
 
 std::string HeavyMuscleCustomer::toString() const
