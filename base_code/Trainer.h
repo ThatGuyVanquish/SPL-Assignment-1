@@ -21,6 +21,7 @@ public:
     std::vector<OrderPair>& getOrders();
     int getSalary() const;
     void Trainer::removeOrders(int start, int end);
+    void Trainer::removeOrders(int cid);
     void Trainer::addOrder(OrderPair& order);
     bool isOpen() const;
     void addCustomer(Customer* customer);

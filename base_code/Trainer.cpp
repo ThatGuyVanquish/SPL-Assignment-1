@@ -133,6 +133,26 @@ void Trainer::removeOrders(int start, int end)
     }
     orderList.erase(orderList.begin()+start, orderList.begin()+end);
 }
+void Trainer::removeOrders(int cid) // Deletes orders without reducing salary
+{
+    int start = 0;
+    int end = 0;
+    bool stop = false;
+    for (OrderPair order : orderList)
+    {
+        if (order.first == cid)
+        {
+            start = end;
+            stop = true;
+        }
+        else if (stop)
+        {
+            break;
+        }
+        end++;
+    }
+    orderList.erase(orderList.begin()+start, orderList.begin()+end);
+}
 
 void Trainer::addOrder(OrderPair& order) // Might need to make it pass by value
 {
@@ -168,6 +188,7 @@ void Trainer::removeCustomer(int id)
             }
         pos++;
     }
+    removeOrders(id);
 }
 
 void Trainer::order(const int customer_id, const std::vector<int> workout_ids, const std::vector<Workout>& workout_options)
