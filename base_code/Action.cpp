@@ -31,8 +31,7 @@ std::string BaseAction::getErrorMsg() const
 OpenTrainer::OpenTrainer(int _id, std::vector<Customer*> &customersList):
     BaseAction(),
     trainerId(_id),
-    customers(customersList),
-    isOpen(false)
+    customers(customersList)
     {
         //calledAction = getInput();
     };
@@ -57,7 +56,6 @@ void OpenTrainer::act(Studio& studio)
     else
     {
         trainer->openTrainer();
-        isOpen = true;
         for (Customer* customer : customers)
         {
             trainer->addCustomer(customer);
@@ -141,4 +139,39 @@ void MoveCustomer::act(Studio& studio)
         nextTrainer->addCustomer(currTrainer->getCustomer(id));
         currTrainer->removeCustomer(id);
     }
+}
+
+Close::Close(int id): 
+trainerId(id)
+{};
+
+void Close::act(Studio &studio)
+{
+    Trainer* trainer = studio.getTrainer(trainerId);
+    if (trainer == nullptr or not trainer->isOpen())
+    {
+        error("Can't close trainer because it does not exist or is already close.");
+    }
+    else
+    {
+        for (Customer* customer : trainer->getCustomers())
+        {
+            trainer->removeCustomer(customer->getId());
+            delete customer;
+        }
+    }
+    trainer->closeTrainer();
+    // Might need to print "traine closed"
+}
+
+std::string Close::toString() const
+{
+    return "";
+}
+
+CloseAll::CloseAll(){};
+
+void CloseAll::act(Studio& studio)
+{
+    
 }

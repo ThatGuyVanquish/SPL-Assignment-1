@@ -35,8 +35,6 @@ public:
     void act(Studio &studio);
     std::string toString() const;
 private:
-    //Studio& thisStudio;
-    bool isOpen;
 	const int trainerId;
 	std::vector<Customer *> customers;
 };
