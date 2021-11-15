@@ -82,6 +82,12 @@ void Order::act(Studio& studio)
     for (Customer* customer : trainer -> getCustomers())
     {   
         std::vector<int> workouts = customer->order(studio.getWorkoutOptions());
+        if (workouts.size() == 0)
+        {
+            trainer->removeCustomer(customer->getId());
+            delete customer;
+            continue;
+        }
         trainer -> order(customer->getId(), workouts, studio.getWorkoutOptions());
         for (int i : workouts)
         {
