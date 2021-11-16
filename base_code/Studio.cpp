@@ -243,26 +243,25 @@ void Studio::start()
 			int tid = std::stoi((*input)[1]);
 			OpenTrainer::OpenTrainer currentTrainer(tid, customers);
 			currentTrainer.act(*this);
+			currentTrainer.setCalledAction(text);
 			actionsLog.push_back(new OpenTrainer(currentTrainer));
 		}
-		/*if (input[0] == "order")
+		else if ((*input)[0] == "order")
 		{
-			int id = std::stoi(input[1]);
-			Order currentOrder = Order::Order(id);
-			currentOrder.act(studio);
-			maybe a print order here if we move the print from act to toString
+			int id = std::stoi((*input)[1]);
+			Order::Order currentOrder(id);
+			currentOrder.act(*this);
+			currentOrder.setCalledAction(text);
+			actionsLog.push_back(new Order(currentOrder));
 		}
-		if (input[0] == "move")
+		else if ((*input)[0] == "move")
 		{
-			int from = input[1];
-			int to = input[2];
-			int id = input[3];
-			we gotta perform checks to see if : origin trainer exists and his session is open
-													destination trainer exists and is open
-														the customer with said id is in origin trainers session
-															the destination trainer has capacity
-																MoveCustomer currentMove = MoveCustomer::MoveCustomer(from, to, id);
-			currentMove.act(studio);
-		*/
+			int from = std::stoi((*input)[1]);
+			int to = std::stoi((*input)[2]);
+			int id = std::stoi((*input)[3]);
+			MoveCustomer::MoveCustomer currentMove(from, to, id);
+			currentMove.act(*this);
+			currentMove.setCalledAction(text);
+			actionsLog.push_back(new MoveCustomer(currentMove));
 		}
 	}
