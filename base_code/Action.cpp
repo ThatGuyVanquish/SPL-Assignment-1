@@ -75,8 +75,20 @@ void OpenTrainer::act(Studio& studio)
 
 std::string OpenTrainer::toString() const 
 {
-    // don't have to return anything really so:
-    return "something";
+    std::string ret;
+    switch (getStatus())
+    {
+        case (COMPLETED):
+        {
+            ret = "Completed";
+        }
+        case (ERROR):
+        {
+            ret = "Error: " + getErrorMsg();
+        }
+    }
+
+    return ret;
 }
 
 OpenTrainer* OpenTrainer::clone() 
@@ -117,7 +129,19 @@ void Order::act(Studio& studio)
 
 std::string Order::toString() const
 {
-    return "hakuna matata";
+    std::string ret;
+    switch (getStatus())
+    {
+        case (COMPLETED):
+        {
+            ret = "Completed";
+        }
+        case (ERROR):
+        {
+            ret = "Error: " + getErrorMsg();
+        }
+    }
+    return ret;
 }
 
 Order* Order::clone() 
@@ -154,7 +178,19 @@ void MoveCustomer::act(Studio& studio)
 
 std::string MoveCustomer::toString() const
 {
-    return "";
+    std::string ret;
+    switch (getStatus())
+    {
+        case (COMPLETED):
+        {
+            ret = "Completed";
+        }
+        case (ERROR):
+        {
+            ret = "Error: " + getErrorMsg();
+        }
+    }
+    return ret;
 }
 
 MoveCustomer* MoveCustomer::clone() 
@@ -188,7 +224,19 @@ void Close::act(Studio &studio)
 
 std::string Close::toString() const
 {
-    return "";
+    std::string ret;
+    switch (getStatus())
+    {
+        case (COMPLETED):
+        {
+            ret = "Completed";
+        }
+        case (ERROR):
+        {
+            ret = "Error: " + getErrorMsg();
+        }
+    }
+    return ret;
 }
 
 Close* Close::clone() 
@@ -203,14 +251,21 @@ void CloseAll::act(Studio& studio)
     
 }
 
-void CloseAll::act(Studio& studio)
-{
-
-}
-
 std::string CloseAll::toString() const
 {
-    return "";
+    std::string ret;
+    switch (getStatus())
+    {
+        case (COMPLETED):
+        {
+            ret = "Completed";
+        }
+        case (ERROR):
+        {
+            ret = "Error: " + getErrorMsg();
+        }
+    }
+    return ret;
 }
 
 CloseAll* CloseAll::clone()
@@ -248,7 +303,19 @@ void PrintWorkoutOptions::act(Studio& studio)
 
 std::string PrintWorkoutOptions::toString() const
 {
-    return "";
+    std::string ret;
+    switch (getStatus())
+    {
+        case (COMPLETED):
+        {
+            ret = "Completed";
+        }
+        case (ERROR):
+        {
+            ret = "Error: " + getErrorMsg();
+        }
+    }
+    return ret;
 }
 
 PrintWorkoutOptions* PrintWorkoutOptions::clone()
@@ -270,4 +337,119 @@ void PrintTrainerStatus::act(Studio& studio)
     {
         cout<<std::to_string(customer->getId()) + " " + customer->getName()<<endl;
     }
+    complete();
+}
+
+std::string PrintTrainerStatus::toString() const
+{
+    std::string ret;
+    switch (getStatus())
+    {
+        case (COMPLETED):
+        {
+            ret = "Completed";
+        }
+        case (ERROR):
+        {
+            ret = "Error: " + getErrorMsg();
+        }
+    }
+    return ret;
+}
+
+PrintTrainerStatus* PrintTrainerStatus::clone()
+{
+    return new PrintTrainerStatus(*this);
+}
+
+PrintActionsLog::PrintActionsLog(){};
+
+void PrintActionsLog::act(Studio& studio)
+{
+    for (BaseAction* action : studio.getActionsLog())
+    {
+        cout<<action->getCalledAction() + " " + action->toString();
+    }
+    complete();
+}
+
+std::string PrintActionsLog::toString() const
+{
+    std::string ret;
+    switch (getStatus())
+    {
+        case (COMPLETED):
+        {
+            ret = "Completed";
+        }
+        case (ERROR):
+        {
+            ret = "Error: " + getErrorMsg();
+        }
+    }
+    return ret;
+}
+
+PrintActionsLog* PrintActionsLog::clone()
+{
+    return new PrintActionsLog(*this);
+}
+
+BackupStudio::BackupStudio(){};
+
+void BackupStudio::act(Studio& studio) 
+{
+
+}
+
+std::string BackupStudio::toString() const
+{
+    std::string ret;
+    switch (getStatus())
+    {
+        case (COMPLETED):
+        {
+            ret = "Completed";
+        }
+        case (ERROR):
+        {
+            ret = "Error: " + getErrorMsg();
+        }
+    }
+    return ret;
+}
+
+BackupStudio* BackupStudio::clone()
+{
+    return new BackupStudio(*this);
+}
+
+RestoreStudio::RestoreStudio(){};
+
+void RestoreStudio::act(Studio& studio)
+{
+
+}
+
+std::string RestoreStudio::toString() const
+{
+    std::string ret;
+    switch (getStatus())
+    {
+        case (COMPLETED):
+        {
+            ret = "Completed";
+        }
+        case (ERROR):
+        {
+            ret = "Error: " + getErrorMsg();
+        }
+    }
+
+    return ret;
+}
+
+RestoreStudio* RestoreStudio::clone()
+{
+    return new RestoreStudio(*this);
 }
