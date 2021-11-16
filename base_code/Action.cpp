@@ -171,7 +171,7 @@ void Close::act(Studio &studio)
     Trainer* trainer = studio.getTrainer(trainerId);
     if (trainer == nullptr or not trainer->isOpen())
     {
-        error("Can't close trainer because it does not exist or is already close.");
+        error("Trainer does not exist or is not open");
     }
     else
     {
@@ -182,7 +182,8 @@ void Close::act(Studio &studio)
         }
     }
     trainer->closeTrainer();
-    // Might need to print "traine closed"
+    cout<< "Trainer " + std::to_string(trainerId) + " closed. Salary " + std::to_string(trainer->getSalary()) + "NIS"<<endl;
+    delete trainer;
 }
 
 std::string Close::toString() const
@@ -200,4 +201,73 @@ CloseAll::CloseAll(){};
 void CloseAll::act(Studio& studio)
 {
     
+}
+
+void CloseAll::act(Studio& studio)
+{
+
+}
+
+std::string CloseAll::toString() const
+{
+    return "";
+}
+
+CloseAll* CloseAll::clone()
+{
+    return new CloseAll(*this);
+}
+
+PrintWorkoutOptions::PrintWorkoutOptions(){};
+
+void PrintWorkoutOptions::act(Studio& studio)
+{
+    std::vector<Workout> wOptions = studio.getWorkoutOptions();
+    for (Workout wrk : wOptions)
+    {
+        std::string type;
+        switch (wrk.getType())
+        {
+            case ANAEROBIC:
+            {
+                type = "Anaerobic";
+            }
+            case CARDIO:
+            {
+                type = "Cardio";
+            }
+            case MIXED:
+            {
+                type = "Mixed";
+            }
+        }
+        cout<< wrk.getName() + ", " + type +", " + std::to_string(wrk.getPrice())<<endl;
+    }
+    complete();
+}
+
+std::string PrintWorkoutOptions::toString() const
+{
+    return "";
+}
+
+PrintWorkoutOptions* PrintWorkoutOptions::clone()
+{
+    return new PrintWorkoutOptions(*this);
+}
+
+PrintTrainerStatus::PrintTrainerStatus(int id):
+trainerId(id)
+{};
+
+void PrintTrainerStatus::act(Studio& studio)
+{
+    // Assuming they never input a wrong number so there's no chance this gets into an error state, waiting for a forum answer
+    Trainer* trainer = studio.getTrainer(trainerId);
+    cout<< "Trainer " + std::to_string(trainerId) + " status: " + trainer->getStatus()<<endl;
+    cout<<"Customers: "<<endl;
+    for (Customer* customer : trainer->getCustomers())
+    {
+        cout<<std::to_string(customer->getId()) + " " + customer->getName()<<endl;
+    }
 }
