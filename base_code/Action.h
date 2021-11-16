@@ -18,6 +18,7 @@ public:
     ActionStatus getStatus() const;
     virtual void act(Studio& studio)=0;
     virtual std::string toString() const=0;
+    virtual BaseAction* clone();
     void trigError(std::string err, std::string input);
     std::string getCalledAction();
 protected:
@@ -36,7 +37,7 @@ public:
     OpenTrainer(int id, std::vector<Customer *> &customersList);
     void act(Studio &studio);
     std::string toString() const;
-
+    OpenTrainer* clone() override;
 private:
 	const int trainerId;
 	std::vector<Customer *> customers;
@@ -48,6 +49,7 @@ public:
     Order(int id);
     void act(Studio &studio);
     std::string toString() const;
+    Order* clone() override;
 private:
     const int trainerId;
 };
@@ -58,6 +60,7 @@ public:
     MoveCustomer(int src, int dst, int customerId);
     void act(Studio &studio);
     std::string toString() const;
+    MoveCustomer* clone() override;
 private:
     const int srcTrainer;
     const int dstTrainer;
@@ -70,6 +73,7 @@ public:
     Close(int id);
     void act(Studio &studio);
     std::string toString() const;
+    Close* clone() override;
 private:
     const int trainerId;
 };
@@ -80,6 +84,7 @@ public:
     CloseAll();
     void act(Studio &studio);
     std::string toString() const;
+    CloseAll* clone() override;
 private:
 };
 
@@ -89,6 +94,7 @@ public:
     PrintWorkoutOptions();
     void act(Studio &studio);
     std::string toString() const;
+    PrintWorkoutOptions* clone() override;
 private:
 };
 
@@ -98,6 +104,7 @@ public:
     PrintTrainerStatus(int id);
     void act(Studio &studio);
     std::string toString() const;
+    PrintTrainerStatus* clone() override;
 private:
     const int trainerId;
 };
@@ -108,6 +115,7 @@ public:
     PrintActionsLog();
     void act(Studio &studio);
     std::string toString() const;
+    PrintActionsLog* clone() override;
 private:
 };
 
@@ -117,6 +125,7 @@ public:
     BackupStudio();
     void act(Studio &studio);
     std::string toString() const;
+    BackupStudio* clone() override;
 private:
 };
 
@@ -126,7 +135,7 @@ public:
     RestoreStudio();
     void act(Studio &studio);
     std::string toString() const;
-
+    RestoreStudio* clone() override;
 };
 
 

@@ -74,6 +74,11 @@ std::string OpenTrainer::toString() const
     return "something";
 }
 
+OpenTrainer* OpenTrainer::clone() 
+{
+    return new OpenTrainer(*this);
+}
+
 Order::Order(int id):
 trainerId(id)
 {};
@@ -104,6 +109,11 @@ std::string Order::toString() const
     return "hakuna matata";
 }
 
+Order* Order::clone() 
+{
+    return new Order(*this);
+}
+
 MoveCustomer::MoveCustomer(int src, int dst, int customerId):
     srcTrainer(src),
     dstTrainer(dst),
@@ -125,6 +135,16 @@ void MoveCustomer::act(Studio& studio)
         nextTrainer->addCustomer(currTrainer->getCustomer(id)->clone());
         currTrainer->removeCustomerWithSalary(id, true);
     }
+}
+
+std::string MoveCustomer::toString() const
+{
+    return "";
+}
+
+MoveCustomer* MoveCustomer::clone() 
+{
+    return new MoveCustomer(*this);
 }
 
 Close::Close(int id): 
@@ -153,6 +173,11 @@ void Close::act(Studio &studio)
 std::string Close::toString() const
 {
     return "";
+}
+
+Close* Close::clone() 
+{
+    return new Close(*this);
 }
 
 CloseAll::CloseAll(){};
