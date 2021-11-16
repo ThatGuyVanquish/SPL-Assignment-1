@@ -40,6 +40,11 @@ std::string BaseAction::getCalledAction()
     return calledAction;
 }
 
+void BaseAction::setCalledAction(std::string action)
+{
+    calledAction=action;
+}
+
 OpenTrainer::OpenTrainer(int _id, std::vector<Customer*> &customersList):
     BaseAction(),
     trainerId(_id),
@@ -86,22 +91,28 @@ trainerId(id)
 void Order::act(Studio& studio)
 {
     Trainer* trainer = studio.getTrainer(trainerId);
-    for (Customer* customer : trainer -> getCustomers())
-    {   
-        std::vector<int> workouts = customer->order(studio.getWorkoutOptions());
-        if (workouts.size() == 0)
-        {
-            trainer->removeCustomer(customer->getId());
-            delete customer;
-            continue;
-        }
-        trainer -> order(customer->getId(), workouts, studio.getWorkoutOptions());
-        for (int i : workouts)
-        {
-            cout<<customer->getName() + " is doing " + studio.getWorkoutOptions()[i].getName()<< endl;
-        }
+    if (trainer == nullptr or not trainer->isOpen())
+    {
+        error("Trainer does not exist or is not open");
     }
-    complete(); // check if need to implement error checking
+    else {
+        for (Customer* customer : trainer -> getCustomers())
+        {   
+            std::vector<int> workouts = customer->order(studio.getWorkoutOptions());
+            if (workouts.size() == 0)
+            {
+                trainer->removeCustomer(customer->getId());
+                delete customer;
+                continue;
+            }
+            trainer -> order(customer->getId(), workouts, studio.getWorkoutOptions());
+            for (int i : workouts)
+            {
+                cout<<customer->getName() + " is doing " + studio.getWorkoutOptions()[i].getName()<< endl;
+            }
+        }
+        complete(); // check if need to implement error checking
+    }
 }
 
 std::string Order::toString() const
@@ -134,6 +145,10 @@ void MoveCustomer::act(Studio& studio)
         nextTrainer->order(id, workouts, workout_options);
         nextTrainer->addCustomer(currTrainer->getCustomer(id)->clone());
         currTrainer->removeCustomerWithSalary(id, true);
+    }
+    else
+    {
+        error("Cannot move customer");
     }
 }
 
