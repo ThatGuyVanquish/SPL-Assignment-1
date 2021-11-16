@@ -115,29 +115,11 @@ void MoveCustomer::act(Studio& studio)
     (nextTrainer->getCustomers()).size() < nextTrainer->getCapacity() and // Destination has room for customers
     currTrainer->getCustomer(id) != nullptr) // Customer exists in source trainer's list
     {
-        bool stop = false; // Boolean to break order loop after completing the customer's orders
-        int start = 0; // Indices to erase from currTrainer's orderList
-        int end = 0;
-        for (OrderPair order : currTrainer->getOrders())
-        {
-            if (order.first == id)
-            {
-                if (not stop) // Keeping current end index as start index
-                {
-                    start = end;
-                    stop = true;
-                }
-                nextTrainer->addOrder(order);
-            }
-            else if (stop)
-            {
-                currTrainer->removeOrders(start, end);
-                break;
-            }
-            end++;
-        }
-        nextTrainer->addCustomer(currTrainer->getCustomer(id));
-        currTrainer->removeCustomer(id);
+        std::vector<Workout> workout_options = studio.getWorkoutOptions();
+        std::vector<int> workouts = (currTrainer->getCustomer(id))->order(workout_options);
+        nextTrainer->order(id, workouts, workout_options);
+        nextTrainer->addCustomer(currTrainer->getCustomer(id)->clone());
+        currTrainer->removeCustomerWithSalary(id, true);
     }
 }
 

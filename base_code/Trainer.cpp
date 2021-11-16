@@ -125,35 +125,6 @@ std::vector<OrderPair>& Trainer::getOrders()
     return orderList;
 }
 
-void Trainer::removeOrders(int start, int end)
-{
-    for (int i = start; i <= end; i++)
-    {
-        salary = salary - orderList[i].second.getPrice();
-    }
-    orderList.erase(orderList.begin()+start, orderList.begin()+end);
-}
-void Trainer::removeOrders(int cid) // Deletes orders without reducing salary
-{
-    int start = 0;
-    int end = 0;
-    bool stop = false;
-    for (OrderPair order : orderList)
-    {
-        if (order.first == cid)
-        {
-            start = end;
-            stop = true;
-        }
-        else if (stop)
-        {
-            break;
-        }
-        end++;
-    }
-    orderList.erase(orderList.begin()+start, orderList.begin()+end);
-}
-
 void Trainer::addOrder(OrderPair& order) // Might need to make it pass by value
 {
     salary = salary + order.second.getPrice();
@@ -175,20 +146,63 @@ void Trainer::addCustomer(Customer* customer)
     customersList.push_back(customer);
 }
 
+void Trainer::removeOrders(int cid, bool salary)
+{
+    int start = 0;
+    int end = 0;
+    bool stop = false;
+    std::vector<OrderPair> newOrders;
+    for (OrderPair order : orderList)
+    {
+        if(order.first == cid)
+        {
+            order.first = -1;
+        }
+        else 
+        {
+            newOrders.push_back(order);
+            if (salary)
+            {
+                salary = salary - order.second.getPrice();
+            }
+        }
+    }
+    orderList.clear();
+    orderList = newOrders;
+}
+
 void Trainer::removeCustomer(int id) 
 {
     int pos = 0;
-    for (Customer*& c : customersList)
+    for (Customer*& customer : customersList)
     {
-        if (c->getId() == id)
+        if (customer->getId() == id)
             {
-            customersList.erase(customersList.begin() + pos);
-            capacity--;
-            break;
+                delete customer;
+                customersList.erase(customersList.begin() + pos);
+                capacity--;
+                break;
             }
         pos++;
     }
-    removeOrders(id);
+    removeOrders(id, false);
+}
+
+void Trainer::removeCustomerWithSalary(int cid, bool salary)
+{
+        int pos = 0;
+    for (Customer*& customer : customersList)
+    {
+        if (customer->getId() == cid)
+            {
+                delete customer;
+                customersList.erase(customersList.begin() + pos);
+                capacity--;
+                break;
+            }
+        pos++;
+    }
+    removeOrders(cid, true);
 }
 
 void Trainer::order(const int customer_id, const std::vector<int> workout_ids, const std::vector<Workout>& workout_options)
