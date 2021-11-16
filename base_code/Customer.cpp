@@ -126,7 +126,7 @@ std::vector<int> HeavyMuscleCustomer::order(const std::vector<Workout>& workoutO
 {
     std::vector<int> wrk;
     std::vector<Workout> wrkCOpy(workoutOptions);
-    std::sort(wrkCOpy.begin(), wrkCOpy.end(), compareAnae);
+    std::sort(wrkCOpy.begin(), wrkCOpy.end(), compareAnae); // Caused problems for emi
     for (Workout workout : wrkCOpy)
     { // Might be able to use else to break for loop if we created the comparator properly.
         if (workout.getType() == ANAEROBIC)
