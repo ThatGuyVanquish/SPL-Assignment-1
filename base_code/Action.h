@@ -18,6 +18,8 @@ public:
     ActionStatus getStatus() const;
     virtual void act(Studio& studio)=0;
     virtual std::string toString() const=0;
+    void trigError(std::string err, std::string input);
+    std::string getCalledAction();
 protected:
     void complete();
     void error(std::string errorMsg);
@@ -25,7 +27,7 @@ protected:
 private:
     std::string errorMsg;
     ActionStatus status;
-    //std::string calledAction;
+    std::string calledAction;
 };
 
 
@@ -34,6 +36,7 @@ public:
     OpenTrainer(int id, std::vector<Customer *> &customersList);
     void act(Studio &studio);
     std::string toString() const;
+
 private:
 	const int trainerId;
 	std::vector<Customer *> customers;

@@ -3,7 +3,8 @@
 #include "Studio.cpp"
 
 BaseAction::BaseAction():
-    errorMsg(nullptr)
+    errorMsg(nullptr),
+    calledAction(nullptr)
     {};
 
 ActionStatus BaseAction::getStatus() const 
@@ -28,19 +29,22 @@ std::string BaseAction::getErrorMsg() const
     return errorMsg;
 }
 
+void BaseAction::trigError(std::string err, std::string input)
+{
+    error(err);
+    calledAction = input;
+}
+
+std::string BaseAction::getCalledAction()
+{
+    return calledAction;
+}
+
 OpenTrainer::OpenTrainer(int _id, std::vector<Customer*> &customersList):
     BaseAction(),
     trainerId(_id),
     customers(customersList)
-    {
-        //calledAction = getInput();
-    };
-
-/*
-std::string BaseAction::getInput(input) {
-
-}
-*/
+    {};
 
 void OpenTrainer::act(Studio& studio)
 {  
