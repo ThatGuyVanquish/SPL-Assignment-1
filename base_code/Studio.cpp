@@ -209,7 +209,7 @@ void Studio::start()
 				cantOpen.trigError("Trainer ID is invalid or not enough capacity", text);
 				continue;
 			}
-			vector<Customer *> customers;
+			vector<Customer*> customers;
 			for (int i = 2; i < (*input).size(); i++)
 			{
 				std::vector<string> *currentCustomer = SplitSentence((*input)[i], ',');
@@ -240,9 +240,10 @@ void Studio::start()
 					id++;
 				}
 			}
-			OpenTrainer currentTrainer = OpenTrainer((*input)[1], customers);
+			int tid = std::stoi((*input)[1]);
+			OpenTrainer::OpenTrainer currentTrainer(tid, customers);
 			currentTrainer.act(*this);
-			actionsLog.push_back(*currentTrainer);
+			actionsLog.push_back(new OpenTrainer(currentTrainer));
 		}
 		/*if (input[0] == "order")
 		{
