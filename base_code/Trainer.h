@@ -29,6 +29,7 @@ public:
     void order(const int customer_id, const std::vector<int> workout_ids, const std::vector<Workout>& workout_options);
     void openTrainer();
     void closeTrainer();
+    std::string getStatus();
 private:
     int capacity;
     bool open;

@@ -222,4 +222,17 @@ void Trainer::openTrainer()
 void Trainer::closeTrainer() 
 {
     open = false;
+    for (Customer* customer : customersList)
+    {
+        removeCustomer(customer->getId());
+    }
+}
+
+std::string Trainer::getStatus()
+{
+    if (isOpen())
+    {
+        return "open";
+    }
+    return "closed";
 }
