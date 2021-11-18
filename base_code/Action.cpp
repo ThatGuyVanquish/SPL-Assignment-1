@@ -58,10 +58,6 @@ void OpenTrainer::act(Studio& studio)
     {
         error("Workout session does not exist or is already open.");
     }
-    else if (trainer->getCapacity()-(trainer->getCustomers()).size() < customers.size())
-    {
-        error("Trainer is in full capacity and can't hold the requested customer(s).");
-    }
     else
     {
         trainer->openTrainer();
