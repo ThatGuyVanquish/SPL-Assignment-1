@@ -5,7 +5,8 @@ using namespace std;
 // Concstructor
 Customer::Customer(std::string c_name, int c_id):
     name(c_name),
-    id(c_id)
+    id(c_id),
+    hasOrdered(false)
     {};
 
 std::string Customer::getName() const 
@@ -16,6 +17,16 @@ std::string Customer::getName() const
 int Customer::getId() const 
 {
     return id;
+}
+
+bool Customer::orderStatus() 
+{
+    return hasOrdered;
+}
+
+void Customer::reqOrder()
+{
+    hasOrdered = true;
 }
 
 bool compareAnae(Workout w1, Workout w2)
@@ -62,6 +73,7 @@ std::vector<int> SweatyCustomer::order(const std::vector<Workout>& workoutOption
             wrk.push_back(workout.getId());
         }
     }
+    reqOrder();
     return wrk;
 }
 
@@ -98,6 +110,7 @@ std::vector<int> CheapCustomer::order(const std::vector<Workout>& workoutOptions
             minId = wrk.getId();
         }
     }
+    reqOrder();
     return std::vector<int>(minId);
 }
 
@@ -134,6 +147,7 @@ std::vector<int> HeavyMuscleCustomer::order(const std::vector<Workout>& workoutO
             wrk.push_back(workout.getId());
         }
     }
+    reqOrder();
     return wrk;
 }
 
@@ -214,6 +228,7 @@ std::vector<int> FullBodyCustomer::order(const std::vector<Workout>& workoutOpti
         }
     }
     std::vector<int> ret = {cardioId, mixId, anaeId};
+    reqOrder();
     return ret;
 }
 

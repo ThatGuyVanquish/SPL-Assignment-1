@@ -13,9 +13,12 @@ public:
     std::string getName() const;
     int getId() const;
     virtual Customer* clone() = 0;
+    bool orderStatus();
+    void reqOrder();
 private:
     const std::string name;
     const int id;
+    bool hasOrdered;
 };
 
 class SweatyCustomer : public Customer {
