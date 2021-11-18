@@ -107,6 +107,11 @@ int Trainer::getCapacity() const
         return capacity;
     }
 
+int Trainer::getRemainingSlots() const
+    {
+        return capacity-customersList.size();
+    }
+
 Customer* Trainer::getCustomer(int id)
 {
     for (Customer*& c : customersList)

@@ -187,7 +187,7 @@ std::vector<Workout> &Studio::getWorkoutOptions()
 
 bool Studio::canOpen(int tid, int numOfCustomers)
 {
-	return (tid < trainers.size() && not trainers[tid]->isOpen() && trainers[tid]->getCapacity() - (trainers[tid]->getCustomers()).size() > numOfCustomers);
+	return (tid < trainers.size() && not trainers[tid]->isOpen());
 }
 
 void Studio::start()
@@ -206,7 +206,7 @@ void Studio::start()
 			{
 				std::vector<Customer *> failed;
 				OpenTrainer::OpenTrainer cantOpen(-1, failed);
-				cantOpen.trigError("Trainer ID is invalid or not enough capacity", text);
+				cantOpen.trigError("Workout session does not exist or is already open.", text);
 				continue;
 			}
 			vector<Customer*> customers;
@@ -221,23 +221,27 @@ void Studio::start()
 					customers.push_back(c);
 					id++;
 				}
-				if (type == "chp")
+				else if (type == "chp")
 				{
 					CheapCustomer *c = new CheapCustomer(name, id);
 					customers.push_back(c);
 					id++;
 				}
-				if (type == "mcl")
+				else if (type == "mcl")
 				{
 					HeavyMuscleCustomer *c = new HeavyMuscleCustomer(name, id);
 					customers.push_back(c);
 					id++;
 				}
-				if (type == "fbc")
+				else if (type == "fbc")
 				{
 					FullBodyCustomer *c = new FullBodyCustomer(name, id);
 					customers.push_back(c);
 					id++;
+				}
+				if (getTrainer(std::stoi((*input)[1]))->getRemainingSlots() == 0)
+				{
+					break;
 				}
 			}
 			int tid = std::stoi((*input)[1]);

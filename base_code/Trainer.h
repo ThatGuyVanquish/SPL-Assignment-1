@@ -30,6 +30,7 @@ public:
     void openTrainer();
     void closeTrainer();
     std::string getStatus();
+    int getRemainingSlots() const;
 private:
     int capacity;
     bool open;
