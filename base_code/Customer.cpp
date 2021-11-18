@@ -1,5 +1,5 @@
 #include "Customer.h"
-#include <algorithm>>
+#include <algorithm>
 using namespace std;
 
 // Concstructor
@@ -54,7 +54,7 @@ SweatyCustomer* SweatyCustomer::clone()
 
 std::vector<int> SweatyCustomer::order(const std::vector<Workout>& workoutOptions)
 {
-    std:vector<int> wrk;
+    std::vector<int> wrk;
     for (Workout workout : workoutOptions)
     {
         if (workout.getType() == CARDIO)
@@ -98,7 +98,7 @@ std::vector<int> CheapCustomer::order(const std::vector<Workout>& workoutOptions
             minId = wrk.getId();
         }
     }
-    return vector<int>(minId);
+    return std::vector<int>(minId);
 }
 
 std::string CheapCustomer::toString() const
