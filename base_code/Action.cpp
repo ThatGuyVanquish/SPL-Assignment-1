@@ -106,6 +106,10 @@ void Order::act(Studio& studio)
     else {
         for (Customer* customer : trainer -> getCustomers())
         {   
+            if (customer->orderStatus())
+            {
+                continue;
+            }
             std::vector<int> workouts = customer->order(studio.getWorkoutOptions());
             if (workouts.size() == 0)
             {
@@ -161,9 +165,13 @@ void MoveCustomer::act(Studio& studio)
     currTrainer->getCustomer(id) != nullptr) // Customer exists in source trainer's list
     {
         std::vector<Workout> workout_options = studio.getWorkoutOptions();
-        std::vector<int> workouts = (currTrainer->getCustomer(id))->order(workout_options);
-        nextTrainer->order(id, workouts, workout_options);
-        nextTrainer->addCustomer(currTrainer->getCustomer(id)->clone());
+        Customer* currentCustomer = (currTrainer->getCustomer(id))->clone();
+        std::vector<int> workouts = (currentCustomer->order(workout_options));
+        if (!currentCustomer->orderStatus())
+        {
+            nextTrainer->order(id, workouts, workout_options);
+        }
+        nextTrainer->addCustomer(currentCustomer);
         currTrainer->removeCustomerWithSalary(id, true);
     }
     else
