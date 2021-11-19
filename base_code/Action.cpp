@@ -173,6 +173,11 @@ void MoveCustomer::act(Studio& studio)
         }
         nextTrainer->addCustomer(currentCustomer);
         currTrainer->removeCustomerWithSalary(id, true);
+        complete();
+        if (currTrainer->getCustomers().empty())
+        {
+            currTrainer->closeTrainer();
+        }
     }
     else
     {
