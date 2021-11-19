@@ -1,7 +1,7 @@
 #include "Action.h"
 #include "Trainer.cpp"
 #include "Studio.cpp"
-
+extern Studio* backup;
 BaseAction::BaseAction():
     errorMsg(nullptr),
     calledAction(nullptr)
@@ -257,7 +257,19 @@ CloseAll::CloseAll(){};
 
 void CloseAll::act(Studio& studio)
 {
-    
+    int numTrainers = studio.getNumOfTrainers();
+    for(int i =0;i<=numTrainers;i++){
+     Trainer* currTrain  = studio.getTrainer(i);
+     int currSalary;
+     if(currTrain != nullptr){
+        currSalary= currTrain->getSalary();
+        cout<<"Trainer "<<i<<" closed."<<"Salary "<<currSalary<<"NIS"<<endl;
+     }
+    }
+
+
+    studio.~Studio(); // deleteing studio
+    cout<<"Studio is now closed!";
 }
 
 std::string CloseAll::toString() const
@@ -408,6 +420,8 @@ BackupStudio::BackupStudio(){};
 
 void BackupStudio::act(Studio& studio) 
 {
+    delete backup;
+    backup  = new Studio(studio);
 
 }
 
@@ -437,7 +451,10 @@ RestoreStudio::RestoreStudio(){};
 
 void RestoreStudio::act(Studio& studio)
 {
-
+   if(backup != nullptr)
+   studio = *backup;
+   else
+   std::cout<<"No backup availble"<<std::endl;
 }
 
 std::string RestoreStudio::toString() const
