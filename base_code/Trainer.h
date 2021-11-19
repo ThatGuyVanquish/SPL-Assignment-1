@@ -31,6 +31,7 @@ public:
     void closeTrainer();
     std::string getStatus();
     int getRemainingSlots() const;
+    Trainer* clone();
 private:
     int capacity;
     bool open;

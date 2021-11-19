@@ -16,12 +16,16 @@ Trainer::Trainer(const Trainer& t):
     capacity(t.capacity), 
     open(t.open),
     customersList(),
-    orderList(t.orderList),
-    salary(0)
+    orderList(),
+    salary(t.salary)
     {
         for (Customer* customer : t.customersList)
         {
             customersList.push_back(customer->clone());
+        }
+        for (OrderPair order : t.orderList)
+        {
+            orderList.push_back(OrderPair(order.first, order.second));
         }
     };
 
@@ -32,13 +36,19 @@ Trainer& Trainer::operator=(const Trainer& t)
     {
         capacity = t.capacity;
         open = t.open;
+        salary = t.salary;
         for (Customer* customer : customersList)
             delete customer;
         customersList.clear();
         for (Customer* customer : t.customersList)
             customersList.push_back(customer->clone());
-        orderList = t.orderList;
+        orderList.clear();
+        for (OrderPair order : t.orderList)
+        {
+            orderList.push_back(OrderPair(order.first, order.second));
+        }
     }
+    return *this;
 }
 
 // Move Constructor
@@ -49,15 +59,16 @@ Trainer::Trainer(const Trainer&& t):
     orderList(),
     salary(t.salary)
 {
-    //t.open = NULL;
-    // Move the pairs to new orderList in reverse order (same as pop order), then reverse
-    for (int i = t.orderList.size()-1; i--;)
+    for (Customer* customer : t.customersList)
     {
-        orderList.push_back(t.orderList[i]);
-        //t.orderList.pop_back();
-        i++;
+        customersList.push_back(customer->clone());
+        delete customer;
     }
-    std::reverse(orderList.begin(), orderList.end()); //why? where are they?
+    for (OrderPair order : t.orderList)
+    {
+        orderList.push_back(order);
+    }
+    delete &t;
 }
 
 // Move Assignment
@@ -72,21 +83,24 @@ Trainer& Trainer::operator=(const Trainer&& t)
         {
             delete customer;
         }
-        int i = 0;
+        customersList.clear();
         for (Customer* customer: t.customersList)
         {
             customersList.push_back(customer);
-            i++;
         }
         orderList.clear();
-        for (int i = t.orderList.size()-1; i--;)
+        for (OrderPair order : t.orderList)
         {
-            orderList.push_back(t.orderList[i]);
-            i++;
+            orderList.push_back(order);
         }
-        std::reverse(orderList.begin(), orderList.end()); // why?!?!?!?!
+        delete &t;
     }
     return *this;
+}
+
+Trainer* Trainer::clone()
+{
+    return new Trainer(*this);
 }
 
 Trainer::~Trainer()
