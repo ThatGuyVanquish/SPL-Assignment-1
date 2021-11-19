@@ -102,6 +102,7 @@ std::vector<int> CheapCustomer::order(const std::vector<Workout>& workoutOptions
 {
     int minPrice(workoutOptions[0].getPrice());
     int minId = 0;
+     std::vector<int> wrk;
     for (Workout wrk : workoutOptions)
     {
         if (wrk.getPrice() < minPrice)
@@ -111,7 +112,8 @@ std::vector<int> CheapCustomer::order(const std::vector<Workout>& workoutOptions
         }
     }
     reqOrder();
-    return std::vector<int>(minId);
+    wrk.push_back(minId);
+    return wrk;
 }
 
 std::string CheapCustomer::toString() const

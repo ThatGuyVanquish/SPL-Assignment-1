@@ -47,9 +47,14 @@ void BaseAction::setCalledAction(std::string action)
 
 OpenTrainer::OpenTrainer(int _id, std::vector<Customer*> &customersList):
     BaseAction(),
-    trainerId(_id),
-    customers(customersList)
-    {};
+    trainerId(_id)
+    {
+      for(Customer* customer : customersList)
+      {
+        customers.push_back(customer->clone());
+      }
+
+    };
 
 void OpenTrainer::act(Studio& studio)
 {  

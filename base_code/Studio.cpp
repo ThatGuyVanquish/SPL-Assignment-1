@@ -3,7 +3,7 @@
 #include <iostream>
 #include <fstream>
 using namespace std;
-Studio::Studio() {} // Empty constructor
+Studio::Studio():open(false) {} // Empty constructor
 
 std::vector<std::string> *SplitSentence(const std::string &Sentence, char splt); // Forward declaration
 
@@ -196,7 +196,7 @@ void Studio::start()
 	int id = 0;
 	std::string text;
 	std::string word;
-	while (true) // Input loop
+	while (true) // Input loop, need to delete customers from here
 	{
 		cin >> text;
 		std::vector<string> *input = SplitSentence(text, ' ');
