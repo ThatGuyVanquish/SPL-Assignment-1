@@ -7,7 +7,7 @@ Studio::Studio() {} // Empty constructor
 
 std::vector<std::string> *SplitSentence(const std::string &Sentence, char splt); // Forward declaration
 
-Studio::Studio(const std::string &configFilePath)
+Studio::Studio(const std::string &configFilePath):open(true)
 { // Constructor with filepath
 	string Text;
 	ifstream MyReadFile(configFilePath);
