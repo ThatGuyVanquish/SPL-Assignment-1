@@ -29,7 +29,7 @@ Studio::Studio(const std::string &configFilePath)
 			data_type++;
 		}
 		else if (data_type == 2)
-		// 1 Is unnecessary because we can count number of different capacities
+		// 1 is unnecessary because we can count number of different capacities
 		{
 			std::vector<std::string> *text_by_lines = SplitSentence(Text, ',');
 			for (std::string str : *text_by_lines)
