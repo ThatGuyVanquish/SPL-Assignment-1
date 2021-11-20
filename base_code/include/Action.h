@@ -17,7 +17,7 @@ public:
     BaseAction();
     virtual void act(Studio& studio)=0;
     virtual std::string toString() const=0;
-    virtual BaseAction* clone(){};
+    virtual BaseAction* clone()=0;
     ActionStatus getStatus() const;
     void trigError(std::string err, std::string input);
     std::string getCalledAction();

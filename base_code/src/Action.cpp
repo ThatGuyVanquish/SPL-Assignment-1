@@ -52,7 +52,10 @@ std::string BaseAction::getErrorMsg() const
 OpenTrainer::OpenTrainer(int _id, std::vector<Customer*> &customersList):
     trainerId(_id),
     customers(customersList)
-    {};
+    {
+        cout<<"test7"<<endl;
+
+    };
 
 void OpenTrainer::act(Studio& studio)
 {  

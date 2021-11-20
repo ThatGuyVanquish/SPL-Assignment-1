@@ -5,7 +5,9 @@
 
 using namespace std;
 
-Studio::Studio() : open(false){}; // Empty constructor
+Studio::Studio():
+open(false)
+{} // Empty constructor
 
 std::vector<std::string> *Studio::SplitSentence(const std::string &Sentence, char splt)
 {
@@ -24,13 +26,15 @@ std::vector<std::string> *Studio::SplitSentence(const std::string &Sentence, cha
 			text_by_lines->push_back(line);
 			line = "";
 		}
-		return text_by_lines;
 	}
+	text_by_lines->push_back(line);
+	return text_by_lines;
 }
 
-Studio::Studio(const std::string &configFilePath) : open(true)
+Studio::Studio(const std::string &configFilePath):
+open(true)
 { // Constructor with filepath
-	string Text;
+	std::string Text;
 	ifstream MyReadFile(configFilePath);
 	int data_type = 0;
 	std::string workout_name("");
@@ -136,6 +140,7 @@ Studio Studio::operator=(const Studio &StudioOther)
 			workout_options.push_back(Workout(wrk.getId(), wrk.getName(), wrk.getPrice(), wrk.getType()));
 		}
 	}
+	return *this;
 }
 
 Studio::Studio(const Studio &&StudioOther)
@@ -277,6 +282,7 @@ void Studio::start()
 				}
 			}
 			OpenTrainer currentTrainer = OpenTrainer(tid, customers);
+			cout<<"test6"<<endl;
 			currentTrainer.act(*this);
 			currentTrainer.setCalledAction(sentence);
 			actionsLog.push_back(new OpenTrainer(currentTrainer));

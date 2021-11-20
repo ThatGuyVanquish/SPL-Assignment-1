@@ -1,4 +1,4 @@
-# # All Targets
+# All Targets
 # all: test
 
 # test: ./src/main.cpp
