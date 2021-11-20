@@ -1,5 +1,6 @@
 #include "../include/Customer.h"
 #include <algorithm>
+#include <iostream> 
 using namespace std;
 
 // Concstructor
@@ -111,7 +112,9 @@ std::vector<int> CheapCustomer::order(const std::vector<Workout>& workoutOptions
         }
     }
     reqOrder();
-    return std::vector<int>(minId);
+    vector<int> orderList;
+    orderList.push_back(minId);
+    return orderList;
 }
 
 std::string CheapCustomer::toString() const
@@ -138,17 +141,32 @@ HeavyMuscleCustomer* HeavyMuscleCustomer::clone()
 std::vector<int> HeavyMuscleCustomer::order(const std::vector<Workout>& workoutOptions)
 {
     std::vector<int> wrk;
-    std::vector<Workout> wrkCOpy(workoutOptions);
-    //std::sort(wrkCOpy.begin(), wrkCOpy.end(), compareAnae); // Caused problems for emi
-    for (Workout workout : wrkCOpy)
-    { // Might be able to use else to break for loop if we created the comparator properly.
-        if (workout.getType() == ANAEROBIC)
+    std::vector<int> anaerobics;
+    int ifd = 0;
+    for (Workout wrk : workoutOptions)
+    {
+        if (wrk.getType() == ANAEROBIC)
         {
-            wrk.push_back(workout.getId());
+            anaerobics.push_back(wrk.getPrice());
+            ifd++;
+        }
+    }
+    std::sort(anaerobics.begin(), anaerobics.end());
+    std::vector<int> ids;
+    for (int i = 0; i < anaerobics.size(); i++)
+    {
+        for (int j = 0; j < workoutOptions.size(); j++)
+        {
+            if (workoutOptions[j].getPrice() == anaerobics[i])
+            {
+                ids.push_back(workoutOptions[j].getId());
+                break;
+            }
         }
     }
     reqOrder();
-    return wrk;
+    std::reverse(ids.begin(), ids.end());
+    return ids;
 }
 
 std::string HeavyMuscleCustomer::toString() const
@@ -183,8 +201,6 @@ std::vector<int> FullBodyCustomer::order(const std::vector<Workout>& workoutOpti
     int cardioMin;
     int mixId = -1;
     int mixMax;
-    // Iterating through workoutOptions once to figure out all 3 workouts.
-    // A sorted workoutOptions vector would've made this faster in practice, but not in theory.
     for (Workout workout : workoutOptions) 
     {
         if (workout.getType() == ANAEROBIC)

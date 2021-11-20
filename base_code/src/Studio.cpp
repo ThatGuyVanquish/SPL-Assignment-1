@@ -68,15 +68,16 @@ open(true)
 			WordsFromCase_ = SplitSentence((Text), ',');
 			workout_name = (*WordsFromCase_)[0];
 			workoutTypeStr = (*WordsFromCase_)[1];
-			if (workoutTypeStr == "Anaerobic")
+			
+			if (workoutTypeStr == " Anaerobic")
 			{
 				workout = WorkoutType::ANAEROBIC;
 			}
-			if (workoutTypeStr == "Mixed")
+			else if (workoutTypeStr == " Mixed")
 			{
 				workout = WorkoutType::MIXED;
 			}
-			if (workoutTypeStr == "Cardio")
+		   else if (workoutTypeStr == " Cardio")
 			{
 				workout = WorkoutType::CARDIO;
 			}
@@ -247,6 +248,7 @@ void Studio::start()
 				std::vector<Customer *> failed;
 				OpenTrainer cantOpen = OpenTrainer(-1, failed);
 				cantOpen.trigError("Workout session does not exist or is already open.", sentence);
+				actionsLog.push_back(new OpenTrainer(cantOpen));
 				continue;
 			}
 			vector<Customer *> customers;
@@ -269,7 +271,7 @@ void Studio::start()
 				{
 					c = new HeavyMuscleCustomer(name, id);
 				}
-				else if (type == "fbc")
+				else if (type == "fbd")
 				{
 					c = new FullBodyCustomer(name, id);
 				}
@@ -281,8 +283,7 @@ void Studio::start()
 					break;
 				}
 			}
-			OpenTrainer currentTrainer = OpenTrainer(tid, customers);
-			cout<<"test6"<<endl;
+			OpenTrainer currentTrainer(tid, customers);
 			currentTrainer.act(*this);
 			currentTrainer.setCalledAction(sentence);
 			actionsLog.push_back(new OpenTrainer(currentTrainer));
@@ -304,6 +305,58 @@ void Studio::start()
 			currentMove.act(*this);
 			currentMove.setCalledAction(sentence);
 			actionsLog.push_back(new MoveCustomer(currentMove));
+		}
+		else if ((*input)[0] == "close")
+		{
+			int tid = std::stoi((*input)[1]);;
+			Close closeTrainer = Close(tid);
+			closeTrainer.act(*this);
+			closeTrainer.setCalledAction(sentence);
+			actionsLog.push_back(new Close(closeTrainer));
+		}
+		else if ((*input)[0] == "closeall")
+		{
+			CloseAll close = CloseAll();
+			close.act(*this);
+			close.setCalledAction(sentence);
+			actionsLog.push_back(new CloseAll(close));
+			open = false;
+		}
+		else if ((*input)[0] == "workout_options")
+		{
+			PrintWorkoutOptions prt = PrintWorkoutOptions();
+			prt.act(*this);
+			prt.setCalledAction(sentence);
+			actionsLog.push_back(new PrintWorkoutOptions(prt));
+		}
+		else if ((*input)[0] == "status")
+		{
+			int tid = std::stoi((*input)[1]);
+			PrintTrainerStatus prt = PrintTrainerStatus(tid);
+			prt.act(*this);
+			prt.setCalledAction(sentence);
+			actionsLog.push_back(new PrintTrainerStatus(prt));
+		}
+		else if ((*input)[0] == "log")
+		{
+			PrintActionsLog prt = PrintActionsLog();
+			prt.act(*this);
+			prt.setCalledAction(sentence);
+			actionsLog.push_back(new PrintActionsLog(prt));
+		}
+		else if ((*input)[0] == "backup")
+		{
+			BackupStudio bck = BackupStudio();
+			bck.act(*this);
+			bck.setCalledAction(sentence);
+			actionsLog.push_back(new BackupStudio(bck));
+		}
+		else if ((*input)[0] == "restore")
+		{
+			RestoreStudio rst = RestoreStudio();
+			rst.act(*this);
+			rst.setCalledAction(sentence);
+			actionsLog.push_back(new RestoreStudio(rst));
 		}
 	}
 }

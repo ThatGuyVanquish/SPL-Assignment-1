@@ -1,5 +1,6 @@
 #include "../include/Trainer.h"
 #include <algorithm>
+#include <iostream>
 
 using namespace std;
 
@@ -144,7 +145,7 @@ std::vector<OrderPair>& Trainer::getOrders()
     return orderList;
 }
 
-void Trainer::addOrder(OrderPair& order) // Might need to make it pass by value
+void Trainer::addOrder(OrderPair order) // Might need to make it pass by value
 {
     salary = salary + order.second.getPrice();
     orderList.push_back(order);
@@ -165,7 +166,7 @@ void Trainer::addCustomer(Customer* customer)
     customersList.push_back(customer);
 }
 
-void Trainer::removeOrders(int cid, bool salary)
+void Trainer::removeOrders(int cid, bool sal)
 {
     std::vector<OrderPair> newOrders;
     for (OrderPair order : orderList)
@@ -173,7 +174,7 @@ void Trainer::removeOrders(int cid, bool salary)
         if(order.first == cid)
         {
             order.first = -1;
-            if (salary)
+            if (sal)
             {
                 salary = salary - order.second.getPrice();
             }
@@ -208,7 +209,8 @@ void Trainer::removeCustomer(int id)
 
 void Trainer::removeCustomerWithSalary(int cid, bool salary)
 {
-        int pos = 0;
+    removeOrders(cid, true);
+    int pos = 0;
     for (Customer*& customer : customersList)
     {
         if (customer->getId() == cid)
@@ -219,7 +221,6 @@ void Trainer::removeCustomerWithSalary(int cid, bool salary)
             }
         pos++;
     }
-    removeOrders(cid, true);
 }
 
 void Trainer::order(const int customer_id, const std::vector<int> workout_ids, const std::vector<Workout>& workout_options)
