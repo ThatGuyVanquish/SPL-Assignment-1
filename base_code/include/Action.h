@@ -22,7 +22,6 @@ public:
     void trigError(std::string err, std::string input);
     std::string getCalledAction();
     void setCalledAction(std::string action);
-    void setStatus();
 protected:
     void complete();
     void error(std::string errorMsg);

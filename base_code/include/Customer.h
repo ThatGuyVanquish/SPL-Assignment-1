@@ -15,7 +15,6 @@ public:
     virtual Customer* clone() = 0;
     bool orderStatus();
     void reqOrder();
-   
     const std::string name;
     const int id;
     bool hasOrdered;

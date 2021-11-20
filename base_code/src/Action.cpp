@@ -7,10 +7,7 @@ using namespace std;
 extern Studio *backup;
 
 BaseAction::BaseAction()
-//errorMsg(nullptr),
-//calledAction(nullptr)
-{
-}
+{};
 
 ActionStatus BaseAction::getStatus() const
 {
@@ -48,11 +45,6 @@ void BaseAction::error(std::string err)
 std::string BaseAction::getErrorMsg() const
 {
     return errorMsg;
-}
-
-void BaseAction::setStatus()
-{
-    complete();
 }
 
 OpenTrainer::OpenTrainer(int _id, std::vector<Customer *> &customersList) : 
@@ -263,7 +255,7 @@ void CloseAll::act(Studio &studio)
         int currSalary;
         cout << "Trainer " << i << " closed."<< " Salary " << std::to_string(currTrain->getSalary()) << "NIS" << endl;
     }
-    studio.~Studio(); // deleteing studio
+    delete &studio; // deleteing studio
 }
 
 std::string CloseAll::toString() const
