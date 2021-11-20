@@ -15,10 +15,10 @@ class Studio;
 class BaseAction{
 public:
     BaseAction();
-    ActionStatus getStatus() const;
     virtual void act(Studio& studio)=0;
     virtual std::string toString() const=0;
     virtual BaseAction* clone();
+    ActionStatus getStatus() const;
     void trigError(std::string err, std::string input);
     std::string getCalledAction();
     void setCalledAction(std::string action);

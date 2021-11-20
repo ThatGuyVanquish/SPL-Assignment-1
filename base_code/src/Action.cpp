@@ -5,14 +5,31 @@
 using namespace std;
 
 extern Studio* backup;
+
 BaseAction::BaseAction():
-    errorMsg(nullptr),
-    calledAction(nullptr)
-    {};
+errorMsg(nullptr),
+calledAction(nullptr)
+{}
 
 ActionStatus BaseAction::getStatus() const 
 {
     return status;
+}
+
+void BaseAction::trigError(std::string err, std::string input)
+{
+    error(err);
+    calledAction = input;
+}
+
+std::string BaseAction::getCalledAction()
+{
+    return calledAction;
+}
+
+void BaseAction::setCalledAction(std::string action)
+{
+    calledAction=action;
 }
 
 void BaseAction::complete() 
@@ -32,24 +49,7 @@ std::string BaseAction::getErrorMsg() const
     return errorMsg;
 }
 
-void BaseAction::trigError(std::string err, std::string input)
-{
-    error(err);
-    calledAction = input;
-}
-
-std::string BaseAction::getCalledAction()
-{
-    return calledAction;
-}
-
-void BaseAction::setCalledAction(std::string action)
-{
-    calledAction=action;
-}
-
 OpenTrainer::OpenTrainer(int _id, std::vector<Customer*> &customersList):
-    BaseAction(),
     trainerId(_id),
     customers(customersList)
     {};

@@ -167,27 +167,27 @@ void Trainer::addCustomer(Customer* customer)
 
 void Trainer::removeOrders(int cid, bool salary)
 {
-    int start = 0;
-    int end = 0;
-    bool stop = false;
     std::vector<OrderPair> newOrders;
     for (OrderPair order : orderList)
     {
         if(order.first == cid)
         {
             order.first = -1;
-        }
-        else 
-        {
-            newOrders.push_back(order);
             if (salary)
             {
                 salary = salary - order.second.getPrice();
             }
         }
+        else 
+        {
+            newOrders.push_back(order);
+        }
     }
     orderList.clear();
-    orderList = newOrders;
+    for (OrderPair order : newOrders)
+    {
+        orderList.push_back(order);
+    }
 }
 
 void Trainer::removeCustomer(int id) 

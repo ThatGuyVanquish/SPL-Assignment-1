@@ -2,12 +2,33 @@
 #include "../include/Action.h"
 #include <iostream>
 #include <fstream>
+
 using namespace std;
-Studio::Studio() {} // Empty constructor
 
-std::vector<std::string> *SplitSentence(const std::string &Sentence, char splt); // Forward declaration
+Studio::Studio() : open(false){}; // Empty constructor
 
-Studio::Studio(const std::string &configFilePath):open(true)
+std::vector<std::string> *Studio::SplitSentence(const std::string &Sentence, char splt)
+{
+	std::string line("");
+	std::vector<std::string> *text_by_lines = new std::vector<std::string>();
+	char current_char;
+	for (int i = 0; i < Sentence.size(); i++)
+	{
+		current_char = Sentence[i];
+		if (current_char != splt)
+		{
+			line.push_back(current_char);
+		}
+		else
+		{
+			text_by_lines->push_back(line);
+			line = "";
+		}
+		return text_by_lines;
+	}
+}
+
+Studio::Studio(const std::string &configFilePath) : open(true)
 { // Constructor with filepath
 	string Text;
 	ifstream MyReadFile(configFilePath);
@@ -75,7 +96,10 @@ Studio::Studio(const Studio &StudioOther)
 
 		actionsLog.push_back(StudioOther.actionsLog[i]->clone());
 	}
-	workout_options = StudioOther.workout_options;
+	for (Workout wrk : StudioOther.workout_options)
+	{
+		workout_options.push_back(Workout(wrk.getId(), wrk.getName(), wrk.getPrice(), wrk.getType()));
+	}
 }
 
 Studio Studio::operator=(const Studio &StudioOther)
@@ -106,7 +130,11 @@ Studio Studio::operator=(const Studio &StudioOther)
 
 			actionsLog.push_back(StudioOther.actionsLog[i]->clone());
 		}
-		workout_options = StudioOther.workout_options;
+		workout_options.clear();
+		for (Workout wrk : StudioOther.workout_options)
+		{
+			workout_options.push_back(Workout(wrk.getId(), wrk.getName(), wrk.getPrice(), wrk.getType()));
+		}
 	}
 }
 
@@ -114,13 +142,16 @@ Studio::Studio(const Studio &&StudioOther)
 { // Move Constructor
 	for (int i = 0; i < StudioOther.trainers.size(); i++)
 	{
-		trainers.push_back(StudioOther.trainers[i]); // not sure we need clone because this is an rvalue ref
+		trainers.push_back(StudioOther.trainers[i]);
 	}
 	for (int i = 0; i < StudioOther.actionsLog.size(); i++)
 	{
-		actionsLog.push_back(StudioOther.actionsLog[i]); // not sure we need clone because this is an rvalue ref
+		actionsLog.push_back(StudioOther.actionsLog[i]);
 	}
-	workout_options = StudioOther.workout_options;
+	for (Workout wrk : StudioOther.workout_options)
+	{
+		workout_options.push_back(wrk);
+	}
 }
 
 Studio Studio::operator=(const Studio &&StudioOther)
@@ -135,7 +166,7 @@ Studio Studio::operator=(const Studio &&StudioOther)
 	}
 	for (int i = 0; i < StudioOther.trainers.size(); i++)
 	{
-		trainers.push_back(StudioOther.trainers[i]); // not sure we need clone because this is an rvalue ref
+		trainers.push_back(StudioOther.trainers[i]);
 	}
 	for (int i = 0; i < actionsLog.size(); i++)
 	{
@@ -143,9 +174,13 @@ Studio Studio::operator=(const Studio &&StudioOther)
 	}
 	for (int i = 0; i < StudioOther.actionsLog.size(); i++)
 	{
-		actionsLog.push_back(StudioOther.actionsLog[i]); // not sure we need clone because this is an rvalue ref
+		actionsLog.push_back(StudioOther.actionsLog[i]);
 	}
-	workout_options = StudioOther.workout_options;
+	workout_options.clear();
+	for (Workout wrk : StudioOther.workout_options)
+	{
+		workout_options.push_back(wrk);
+	}
 	return *this;
 }
 
@@ -199,27 +234,27 @@ void Studio::start()
 	{
 		std::string sentence;
 		getline(cin, sentence);
-		std::vector<string> *input = SplitSentence(sentence, ' ');	
+		std::vector<string> *input = Studio::SplitSentence(sentence, ' ');
 		if ((*input)[0] == "open")
 		{
 			if (not canOpen(std::stoi((*input)[1]), (*input).size() - 2))
 			{
 				std::vector<Customer *> failed;
-				OpenTrainer::OpenTrainer cantOpen(-1, failed);
+				OpenTrainer cantOpen = OpenTrainer(-1, failed);
 				cantOpen.trigError("Workout session does not exist or is already open.", sentence);
 				continue;
 			}
-			vector<Customer*> customers;
+			vector<Customer *> customers;
 			int tid = std::stoi((*input)[1]);
 			for (int i = 2; i < (*input).size(); i++)
 			{
-				std::vector<string> *currentCustomer = SplitSentence((*input)[i], ',');
+				std::vector<string> *currentCustomer = Studio::SplitSentence((*input)[i], ',');
 				std::string name = (*currentCustomer)[0];
 				std::string type = (*currentCustomer)[1];
-				Customer* c;
+				Customer *c;
 				if (type == "swt")
 				{
-					c = new SweatyCustomer(name, id);	
+					c = new SweatyCustomer(name, id);
 				}
 				else if (type == "chp")
 				{
@@ -241,7 +276,7 @@ void Studio::start()
 					break;
 				}
 			}
-			OpenTrainer::OpenTrainer currentTrainer(tid, customers);
+			OpenTrainer currentTrainer = OpenTrainer(tid, customers);
 			currentTrainer.act(*this);
 			currentTrainer.setCalledAction(sentence);
 			actionsLog.push_back(new OpenTrainer(currentTrainer));
@@ -249,7 +284,7 @@ void Studio::start()
 		else if ((*input)[0] == "order")
 		{
 			int id = std::stoi((*input)[1]);
-			Order::Order currentOrder(id);
+			Order currentOrder = Order(id);
 			currentOrder.act(*this);
 			currentOrder.setCalledAction(sentence);
 			actionsLog.push_back(new Order(currentOrder));
@@ -259,9 +294,10 @@ void Studio::start()
 			int from = std::stoi((*input)[1]);
 			int to = std::stoi((*input)[2]);
 			int id = std::stoi((*input)[3]);
-			MoveCustomer::MoveCustomer currentMove(from, to, id);
+			MoveCustomer currentMove = MoveCustomer(from, to, id);
 			currentMove.act(*this);
 			currentMove.setCalledAction(sentence);
 			actionsLog.push_back(new MoveCustomer(currentMove));
 		}
 	}
+}
