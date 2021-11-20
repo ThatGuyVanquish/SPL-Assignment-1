@@ -15,13 +15,14 @@ class Studio;
 class BaseAction{
 public:
     BaseAction();
-    ActionStatus getStatus() const;
     virtual void act(Studio& studio)=0;
     virtual std::string toString() const=0;
-    virtual BaseAction* clone();
+    virtual BaseAction* clone()=0;
+    ActionStatus getStatus() const;
     void trigError(std::string err, std::string input);
     std::string getCalledAction();
     void setCalledAction(std::string action);
+    void setStatus();
 protected:
     void complete();
     void error(std::string errorMsg);
@@ -39,6 +40,7 @@ public:
     void act(Studio &studio);
     std::string toString() const;
     OpenTrainer* clone() override;
+    std::vector<Customer*> getCustomers();
 private:
 	const int trainerId;
 	std::vector<Customer *> customers;

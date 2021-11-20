@@ -20,8 +20,8 @@ public:
     std::vector<Customer*>& getCustomers();
     std::vector<OrderPair>& getOrders();
     int getSalary() const;
-    void Trainer::removeOrders(int cid, bool salary);
-    void Trainer::addOrder(OrderPair& order);
+    void removeOrders(int cid, bool salary);
+    void addOrder(OrderPair order);
     bool isOpen() const;
     void addCustomer(Customer* customer);
     void removeCustomer(int id);
