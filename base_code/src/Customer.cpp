@@ -30,6 +30,11 @@ void Customer::reqOrder()
     hasOrdered = true;
 }
 
+Customer::~Customer()
+{
+    cout<<"delcustomer"<<endl;
+}
+
 bool compareAnae(Workout w1, Workout w2)
 {
     if (w1.getType() == ANAEROBIC)
@@ -83,7 +88,10 @@ std::string SweatyCustomer::toString() const
     return getId() + " " + getName();
 }
 
-
+SweatyCustomer::~SweatyCustomer()
+{
+    cout<<"sweatydel"<<endl;
+}
 
 /*
 **** Cheap Customer ****
@@ -124,6 +132,10 @@ std::string CheapCustomer::toString() const
     return getId() + " " + getName();
 }
 
+CheapCustomer::~CheapCustomer()
+{
+    cout<<"cheapdel"<<endl;
+}
 
 /*
 **** Heavy Muscle Customer ****
@@ -177,6 +189,10 @@ std::string HeavyMuscleCustomer::toString() const
     return getId() + " " + getName();
 }
 
+HeavyMuscleCustomer::~HeavyMuscleCustomer()
+{
+    cout<<"heavydel"<<endl;
+}
 
 /*
 **** Full Body Customer ****
@@ -254,4 +270,9 @@ std::vector<int> FullBodyCustomer::order(const std::vector<Workout>& workoutOpti
 std::string FullBodyCustomer::toString() const
 {
     return getId() + " " + getName();
+}
+
+FullBodyCustomer::~FullBodyCustomer()
+{
+    cout<<"fulldel"<<endl;
 }

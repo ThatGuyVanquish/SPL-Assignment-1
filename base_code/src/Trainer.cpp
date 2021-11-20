@@ -9,17 +9,21 @@ Trainer::Trainer(int t_capacity):
     capacity(t_capacity),
     open(false),
     customersList(),
-    orderList()
+    orderList(),
+    salary(0)
     {};
 
 // Copy Constructor
 Trainer::Trainer(const Trainer& t): 
-    capacity(t.capacity), 
-    open(t.open),
+    capacity(), 
+    open(),
     customersList(),
     orderList(),
-    salary(t.salary)
+    salary()
     {
+        capacity = t.getCapacity();
+        open = t.isOpen();
+        salary = t.getSalary();
         for (Customer* customer : t.customersList)
         {
             customersList.push_back(customer->clone());
@@ -49,7 +53,8 @@ Trainer& Trainer::operator=(const Trainer& t)
             orderList.push_back(OrderPair(order.first, order.second));
         }
     }
-    return *this;
+    cout<<"imcalledd"<<endl;
+   // return *this;
 }
 
 // Move Constructor
@@ -106,15 +111,10 @@ Trainer* Trainer::clone()
 
 Trainer::~Trainer()
 {
-    open = NULL;
-    salary = 0;
-    capacity = 0;
     for (Customer* customer : customersList)
     {
         delete customer;
     }
-    customersList.clear();
-    //orderList.clear();
 }
 
 int Trainer::getCapacity() const 
@@ -194,11 +194,12 @@ void Trainer::removeOrders(int cid, bool sal)
 void Trainer::removeCustomer(int id) 
 {
     int pos = 0;
-    for (Customer*& customer : customersList)
+    for (Customer* customer : customersList)
     {
         if (customer->getId() == id)
             {
                 delete customer;
+                
                 customersList.erase(customersList.begin() + pos);
                 break;
             }

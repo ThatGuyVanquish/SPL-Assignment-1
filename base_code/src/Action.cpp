@@ -49,9 +49,14 @@ std::string BaseAction::getErrorMsg() const
 
 OpenTrainer::OpenTrainer(int _id, std::vector<Customer *> &customersList) : 
 BaseAction(),
-trainerId(_id),
-customers(customersList)
-{};
+trainerId(_id)
+{
+    for (Customer* customer : customersList)
+    {
+        customers.push_back(customer);
+    }
+    
+};
 
 std::vector<Customer*> OpenTrainer::getCustomers()
 {
@@ -217,13 +222,12 @@ void Close::act(Studio &studio)
         for (Customer* customer : trainer->getCustomers())
         {
             trainer->removeCustomer(customer->getId());
-            //delete customer;
         }
     }
     trainer->closeTrainer();
     int tsal = trainer->getSalary();
     cout << "Trainer " + std::to_string(trainerId) + " closed. Salary " + std::to_string(tsal) + "NIS" << endl;
-    delete trainer;
+    //delete trainer;
 }
 
 std::string Close::toString() const
@@ -254,8 +258,10 @@ void CloseAll::act(Studio &studio)
         Trainer *currTrain = studio.getTrainer(i);
         int currSalary;
         cout << "Trainer " << i << " closed."<< " Salary " << std::to_string(currTrain->getSalary()) << "NIS" << endl;
+       
+        
     }
-    delete &studio; // deleteing studio
+    //delete &studio
 }
 
 std::string CloseAll::toString() const

@@ -101,7 +101,7 @@ Studio::Studio(const Studio &StudioOther)
 	}
 	for (Workout wrk : StudioOther.workout_options)
 	{
-		workout_options.push_back(Workout(wrk.getId(), wrk.getName(), wrk.getPrice(), wrk.getType()));
+		workout_options.push_back(Workout(wrk));
 	}
 }
 
@@ -129,13 +129,13 @@ Studio Studio::operator=(const Studio &StudioOther)
 		{
 			actionsLog.push_back(action);
 		}
-		workout_options.clear();
+		//workout_options.clear();
 		for (Workout wrk : StudioOther.workout_options)
 		{
 			workout_options.push_back(Workout(wrk.getId(), wrk.getName(), wrk.getPrice(), wrk.getType()));
 		}
 	}
-	return *this;
+	//eturn *this;
 }
 
 Studio::Studio(const Studio &&StudioOther)
@@ -279,6 +279,7 @@ void Studio::start()
 			currentTrainer->act(*this);
 			currentTrainer->setCalledAction(sentence);
 			actionsLog.push_back(currentTrainer);
+			
 		}
 		else if ((*input)[0] == "order")
 		{
