@@ -422,7 +422,6 @@ void BackupStudio::act(Studio& studio)
 {
     delete backup;
     backup  = new Studio(studio);
-
 }
 
 std::string BackupStudio::toString() const
@@ -454,7 +453,7 @@ void RestoreStudio::act(Studio& studio)
    if(backup != nullptr)
    studio = *backup;
    else
-   std::cout<<"No backup availble"<<std::endl;
+   error("No backup available");
 }
 
 std::string RestoreStudio::toString() const

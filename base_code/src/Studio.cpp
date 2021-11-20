@@ -187,67 +187,63 @@ std::vector<Workout> &Studio::getWorkoutOptions()
 
 bool Studio::canOpen(int tid, int numOfCustomers)
 {
-	return (tid < trainers.size() && not trainers[tid]->isOpen());
+	return (tid >= 0 and tid < trainers.size() && not trainers[tid]->isOpen());
 }
 
 void Studio::start()
 {
 	std::cout << "The Studio is now open!" << std::endl;
 	int id = 0;
-	std::string text;
-	std::string word;
-	while (true) // Input loop
+	open = true;
+	while (open) // Input loop
 	{
-		cin >> text;
-		std::vector<string> *input = SplitSentence(text, ' ');
+		std::string sentence;
+		getline(cin, sentence);
+		std::vector<string> *input = SplitSentence(sentence, ' ');	
 		if ((*input)[0] == "open")
 		{
 			if (not canOpen(std::stoi((*input)[1]), (*input).size() - 2))
 			{
 				std::vector<Customer *> failed;
 				OpenTrainer::OpenTrainer cantOpen(-1, failed);
-				cantOpen.trigError("Workout session does not exist or is already open.", text);
+				cantOpen.trigError("Workout session does not exist or is already open.", sentence);
 				continue;
 			}
 			vector<Customer*> customers;
+			int tid = std::stoi((*input)[1]);
 			for (int i = 2; i < (*input).size(); i++)
 			{
 				std::vector<string> *currentCustomer = SplitSentence((*input)[i], ',');
 				std::string name = (*currentCustomer)[0];
 				std::string type = (*currentCustomer)[1];
+				Customer* c;
 				if (type == "swt")
 				{
-					SweatyCustomer *c = new SweatyCustomer(name, id);
-					customers.push_back(c);
-					id++;
+					c = new SweatyCustomer(name, id);	
 				}
 				else if (type == "chp")
 				{
-					CheapCustomer *c = new CheapCustomer(name, id);
-					customers.push_back(c);
-					id++;
+					c = new CheapCustomer(name, id);
 				}
 				else if (type == "mcl")
 				{
-					HeavyMuscleCustomer *c = new HeavyMuscleCustomer(name, id);
-					customers.push_back(c);
-					id++;
+					c = new HeavyMuscleCustomer(name, id);
 				}
 				else if (type == "fbc")
 				{
-					FullBodyCustomer *c = new FullBodyCustomer(name, id);
-					customers.push_back(c);
-					id++;
+					c = new FullBodyCustomer(name, id);
 				}
-				if (getTrainer(std::stoi((*input)[1]))->getRemainingSlots() == 0)
+				id++;
+				customers.push_back(c);
+				delete currentCustomer;
+				if (getTrainer(tid)->getCapacity() == customers.size())
 				{
 					break;
 				}
 			}
-			int tid = std::stoi((*input)[1]);
 			OpenTrainer::OpenTrainer currentTrainer(tid, customers);
 			currentTrainer.act(*this);
-			currentTrainer.setCalledAction(text);
+			currentTrainer.setCalledAction(sentence);
 			actionsLog.push_back(new OpenTrainer(currentTrainer));
 		}
 		else if ((*input)[0] == "order")
@@ -255,7 +251,7 @@ void Studio::start()
 			int id = std::stoi((*input)[1]);
 			Order::Order currentOrder(id);
 			currentOrder.act(*this);
-			currentOrder.setCalledAction(text);
+			currentOrder.setCalledAction(sentence);
 			actionsLog.push_back(new Order(currentOrder));
 		}
 		else if ((*input)[0] == "move")
@@ -265,7 +261,7 @@ void Studio::start()
 			int id = std::stoi((*input)[3]);
 			MoveCustomer::MoveCustomer currentMove(from, to, id);
 			currentMove.act(*this);
-			currentMove.setCalledAction(text);
+			currentMove.setCalledAction(sentence);
 			actionsLog.push_back(new MoveCustomer(currentMove));
 		}
 	}

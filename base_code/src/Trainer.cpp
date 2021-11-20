@@ -199,7 +199,6 @@ void Trainer::removeCustomer(int id)
             {
                 delete customer;
                 customersList.erase(customersList.begin() + pos);
-                capacity--;
                 break;
             }
         pos++;
@@ -216,7 +215,6 @@ void Trainer::removeCustomerWithSalary(int cid, bool salary)
             {
                 delete customer;
                 customersList.erase(customersList.begin() + pos);
-                capacity--;
                 break;
             }
         pos++;
