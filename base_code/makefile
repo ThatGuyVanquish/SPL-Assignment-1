@@ -2,10 +2,10 @@
 # all: test
 
 test: ./src/main.cpp
- 	g++ -o ./main.o ./src/main.cpp
+	g++ -o ./main.o ./src/main.cpp
 
 clean:
- 	rm -f ./main.o
+	rm -f ./main.o
 
 
 CXX = g++
@@ -31,7 +31,7 @@ all: ./bin/studio
 
 # clean build files                                                             
 clean:
-@rm -f ./bin/*
+	@rm -f ./bin/*
 
 -include $(DEPS)
 
@@ -49,16 +49,16 @@ all: ./bin/studio
 
 # build studio                                                                  
 ./bin/studio: $(OBJS)
-		@echo "Building ..."
-		$(CXX) $(OBJS) -o $@
-		@echo "Finished building"
+	@echo "Building ..."
+	$(CXX) $(OBJS) -o $@
+	@echo "Finished building"
 
 # build cpp files                                                               
 ./bin/%.o: ./src/%.cpp
-		$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
 # clean build files                                                             
 clean:
-		@rm -f ./bin/*
+	@rm -f ./bin/*
 
 -include $(DEPS)

@@ -1,5 +1,5 @@
-#include "Studio.h"
-#include "Action.h"
+#include "../include/Studio.h"
+#include "../include/Action.h"
 #include <iostream>
 #include <fstream>
 using namespace std;
