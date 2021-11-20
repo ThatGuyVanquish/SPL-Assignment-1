@@ -114,7 +114,7 @@ Trainer::~Trainer()
         delete customer;
     }
     customersList.clear();
-    orderList.clear();
+    //orderList.clear();
 }
 
 int Trainer::getCapacity() const 

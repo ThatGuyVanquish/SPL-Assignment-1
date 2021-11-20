@@ -83,6 +83,8 @@ std::string SweatyCustomer::toString() const
     return getId() + " " + getName();
 }
 
+
+
 /*
 **** Cheap Customer ****
 Order strategy:
@@ -121,6 +123,7 @@ std::string CheapCustomer::toString() const
 {
     return getId() + " " + getName();
 }
+
 
 /*
 **** Heavy Muscle Customer ****

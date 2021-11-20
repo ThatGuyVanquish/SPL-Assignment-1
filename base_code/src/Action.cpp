@@ -50,11 +50,21 @@ std::string BaseAction::getErrorMsg() const
     return errorMsg;
 }
 
+void BaseAction::setStatus()
+{
+    complete();
+}
+
 OpenTrainer::OpenTrainer(int _id, std::vector<Customer *> &customersList) : 
 BaseAction(),
 trainerId(_id),
 customers(customersList)
 {};
+
+std::vector<Customer*> OpenTrainer::getCustomers()
+{
+    return customers;
+}
 
 void OpenTrainer::act(Studio &studio)
 {
@@ -212,14 +222,15 @@ void Close::act(Studio &studio)
     }
     else
     {
-        for (Customer *customer : trainer->getCustomers())
+        for (Customer* customer : trainer->getCustomers())
         {
             trainer->removeCustomer(customer->getId());
             //delete customer;
         }
     }
     trainer->closeTrainer();
-    cout << "Trainer " + std::to_string(trainerId) + " closed. Salary " + std::to_string(trainer->getSalary()) + "NIS" << endl;
+    int tsal = trainer->getSalary();
+    cout << "Trainer " + std::to_string(trainerId) + " closed. Salary " + std::to_string(tsal) + "NIS" << endl;
     delete trainer;
 }
 
@@ -246,17 +257,11 @@ CloseAll::CloseAll(){};
 
 void CloseAll::act(Studio &studio)
 {
-    int numTrainers = studio.getNumOfTrainers();
-    for (int i = 0; i <= numTrainers; i++)
+    for (int i = 0; i < studio.getNumOfTrainers(); i++)
     {
         Trainer *currTrain = studio.getTrainer(i);
         int currSalary;
-        if (currTrain != nullptr)
-        {
-            currSalary = currTrain->getSalary();
-            cout << "Trainer " << i << " closed."
-                 << "Salary " << currSalary << "NIS" << endl;
-        }
+        cout << "Trainer " << i << " closed."<< " Salary " << std::to_string(currTrain->getSalary()) << "NIS" << endl;
     }
     studio.~Studio(); // deleteing studio
 }
@@ -334,17 +339,20 @@ void PrintTrainerStatus::act(Studio &studio)
     // Assuming they never input a wrong number so there's no chance this gets into an error state, waiting for a forum answer
     Trainer *trainer = studio.getTrainer(trainerId);
     cout << "Trainer " + std::to_string(trainerId) + " status: " + trainer->getStatus() << endl;
-    cout << "Customers: " << endl;
-    for (Customer *customer : trainer->getCustomers())
-    {
-        cout << std::to_string(customer->getId()) + " " + customer->getName() << endl;
+    if (trainer->getStatus() == "open")
+    { 
+        cout << "Customers: " << endl;
+        for (Customer *customer : trainer->getCustomers())
+        {
+            cout << std::to_string(customer->getId()) + " " + customer->getName() << endl;
+        }
+        cout << "Orders: " << endl;
+        for (OrderPair order : trainer->getOrders())
+        {
+            cout << order.second.getName() + " " + std::to_string(order.second.getPrice()) + "NIS " + std::to_string(order.first) << endl;
+        }
+        cout << "Current Trainer's Salary: " + std::to_string(trainer->getSalary()) + "NIS" << endl;
     }
-    cout << "Orders: " << endl;
-    for (OrderPair order : trainer->getOrders())
-    {
-        cout << order.second.getName() + " " + std::to_string(order.second.getPrice()) + "NIS " + std::to_string(order.first) << endl;
-    }
-    cout << "Current Trainer's Salary: " + std::to_string(trainer->getSalary()) + "NIS" << endl;
     complete();
 }
 
