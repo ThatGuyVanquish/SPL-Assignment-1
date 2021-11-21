@@ -440,8 +440,6 @@ void RestoreStudio::act(Studio &studio)
     {
         studio = *backup;
         complete();
-        delete backup; // Waiting on forum answer if we need to delete backup after restoration
-        backup=nullptr;
     }
     else
     {

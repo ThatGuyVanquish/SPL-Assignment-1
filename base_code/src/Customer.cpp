@@ -44,6 +44,8 @@ SweatyCustomer* SweatyCustomer::clone()
     return new SweatyCustomer(getName(), getId());;
 }
 
+SweatyCustomer::~SweatyCustomer(){}
+
 std::vector<int> SweatyCustomer::order(const std::vector<Workout>& workoutOptions)
 {
     std::vector<int> wrk;
@@ -77,6 +79,8 @@ CheapCustomer* CheapCustomer::clone()
 {
     return new CheapCustomer(getName(), getId());;
 }
+
+CheapCustomer::~CheapCustomer(){}
 
 std::vector<int> CheapCustomer::order(const std::vector<Workout>& workoutOptions)
 {
@@ -115,6 +119,8 @@ HeavyMuscleCustomer* HeavyMuscleCustomer::clone()
 {
     return new HeavyMuscleCustomer(getName(), getId());
 }
+
+HeavyMuscleCustomer::~HeavyMuscleCustomer(){}
 
 std::vector<int> HeavyMuscleCustomer::order(const std::vector<Workout>& workoutOptions)
 {
@@ -168,6 +174,8 @@ FullBodyCustomer* FullBodyCustomer::clone()
 {
     return new FullBodyCustomer(getName(), getId());;
 }
+
+FullBodyCustomer::~FullBodyCustomer(){}
 
 std::vector<int> FullBodyCustomer::order(const std::vector<Workout>& workoutOptions)
 {
