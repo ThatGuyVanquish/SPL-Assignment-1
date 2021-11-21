@@ -53,7 +53,6 @@ Trainer& Trainer::operator=(const Trainer& t)
             orderList.push_back(OrderPair(order.first, order.second));
         }
     }
-    cout<<"imcalledd"<<endl;
    // return *this;
 }
 
@@ -118,20 +117,24 @@ Trainer::~Trainer()
 }
 
 int Trainer::getCapacity() const 
-    {
-        return capacity;
-    }
+{
+    return capacity;
+}
 
 int Trainer::getRemainingSlots() const
-    {
-        return capacity-customersList.size();
-    }
+{
+    return capacity-customersList.size();
+}
 
 Customer* Trainer::getCustomer(int id)
 {
     for (Customer*& c : customersList)
+    {
         if (c->getId() == id)
+        {
             return c;
+        }
+    }
     return nullptr;
 }
 

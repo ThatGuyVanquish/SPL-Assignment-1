@@ -208,18 +208,19 @@ trainerId(id)
 
 void Close::act(Studio &studio)
 {
+    vector<Customer*> temp;
     Trainer *trainer = studio.getTrainer(trainerId);
+    temp = trainer->getCustomers();
     if (trainer == nullptr or not trainer->isOpen())
     {
         error("Trainer does not exist or is not open");
     }
     else
     {
-        for (Customer* customer : trainer->getCustomers())
+        for (Customer* customer : temp)
         {
             trainer->removeCustomer(customer->getId());
         }
-    
     trainer->closeTrainer();
     int tsal = trainer->getSalary();
     cout << "Trainer " + std::to_string(trainerId) + " closed. Salary " + std::to_string(tsal) + "NIS" << endl;
