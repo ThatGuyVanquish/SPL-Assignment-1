@@ -30,10 +30,10 @@ void Customer::reqOrder()
     hasOrdered = true;
 }
 
-Customer::~Customer()
-{
-    cout<<"delcustomer"<<endl;
-}
+// Customer::~Customer()
+// {
+//     cout<<"delcustomer"<<endl;
+// }
 
 bool compareAnae(Workout w1, Workout w2)
 {
@@ -88,10 +88,10 @@ std::string SweatyCustomer::toString() const
     return getId() + " " + getName();
 }
 
-SweatyCustomer::~SweatyCustomer()
-{
-    cout<<"sweatydel"<<endl;
-}
+// SweatyCustomer::~SweatyCustomer()
+// {
+//     cout<<"sweatydel"<<endl;
+// }
 
 /*
 **** Cheap Customer ****
@@ -132,10 +132,10 @@ std::string CheapCustomer::toString() const
     return getId() + " " + getName();
 }
 
-CheapCustomer::~CheapCustomer()
-{
-    cout<<"cheapdel"<<endl;
-}
+// CheapCustomer::~CheapCustomer()
+// {
+//     cout<<"cheapdel"<<endl;
+// }
 
 /*
 **** Heavy Muscle Customer ****
@@ -168,13 +168,14 @@ std::vector<int> HeavyMuscleCustomer::order(const std::vector<Workout>& workoutO
     }
     std::sort(anaerobics.begin(), anaerobics.end());
     std::vector<int> ids;
-    for (int price : anaerobics)
+    for (int i = 0; i < anaerobics.size(); i++)
     {
-        for (Workout workout : workoutOptions)
+        for (int j = 0; j < workoutOptions.size(); j++)
         {
-            if (workout.getPrice() == price and workout.getType() == ANAEROBIC)
+            if (workoutOptions[j].getPrice() == anaerobics[i] and workoutOptions[j].getType() == ANAEROBIC)
             {
-                ids.push_back(workout.getId());
+                
+                ids.push_back(workoutOptions[j].getId());
                 break;
             }
         }
@@ -189,10 +190,10 @@ std::string HeavyMuscleCustomer::toString() const
     return getId() + " " + getName();
 }
 
-HeavyMuscleCustomer::~HeavyMuscleCustomer()
-{
-    cout<<"heavydel"<<endl;
-}
+// HeavyMuscleCustomer::~HeavyMuscleCustomer()
+// {
+//     cout<<"heavydel"<<endl;
+// }
 
 /*
 **** Full Body Customer ****
@@ -272,7 +273,7 @@ std::string FullBodyCustomer::toString() const
     return getId() + " " + getName();
 }
 
-FullBodyCustomer::~FullBodyCustomer()
-{
-    cout<<"fulldel"<<endl;
-}
+// FullBodyCustomer::~FullBodyCustomer()
+// {
+//     cout<<"fulldel"<<endl;
+// }

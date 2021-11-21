@@ -196,11 +196,12 @@ void Trainer::removeCustomer(int id)
     int pos = 0;
     for (Customer* customer : customersList)
     {
-        if (customer->getId() == id)
+        if (id == customer->getId())
             {
-                delete customer;
+        
                 
                 customersList.erase(customersList.begin() + pos);
+                delete customer;
                 break;
             }
         pos++;

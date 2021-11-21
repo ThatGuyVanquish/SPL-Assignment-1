@@ -7,7 +7,10 @@ using namespace std;
 extern Studio *backup;
 
 BaseAction::BaseAction()
-{};
+//errorMsg(nullptr),
+//calledAction(nullptr)
+{
+}
 
 ActionStatus BaseAction::getStatus() const
 {
@@ -47,16 +50,16 @@ std::string BaseAction::getErrorMsg() const
     return errorMsg;
 }
 
+// void BaseAction::setStatus()
+// {
+//     complete();
+// }
+
 OpenTrainer::OpenTrainer(int _id, std::vector<Customer *> &customersList) : 
 BaseAction(),
-trainerId(_id)
-{
-    for (Customer* customer : customersList)
-    {
-        customers.push_back(customer);
-    }
-    
-};
+trainerId(_id),
+customers(customersList)
+{};
 
 std::vector<Customer*> OpenTrainer::getCustomers()
 {
@@ -121,7 +124,7 @@ void Order::act(Studio &studio)
             if (workouts.size() == 0)
             {
                 trainer->removeCustomer(customer->getId());
-                delete customer;
+              //  delete customer;
                 continue;
             }
             trainer->order(customer->getId(), workouts, studio.getWorkoutOptions());
@@ -222,12 +225,14 @@ void Close::act(Studio &studio)
         for (Customer* customer : trainer->getCustomers())
         {
             trainer->removeCustomer(customer->getId());
+            //delete customer;
         }
-    }
+    
     trainer->closeTrainer();
     int tsal = trainer->getSalary();
     cout << "Trainer " + std::to_string(trainerId) + " closed. Salary " + std::to_string(tsal) + "NIS" << endl;
-    //delete trainer;
+  // delete trainer;
+   }
 }
 
 std::string Close::toString() const
@@ -258,10 +263,8 @@ void CloseAll::act(Studio &studio)
         Trainer *currTrain = studio.getTrainer(i);
         int currSalary;
         cout << "Trainer " << i << " closed."<< " Salary " << std::to_string(currTrain->getSalary()) << "NIS" << endl;
-       
-        
     }
-    //delete &studio
+   
 }
 
 std::string CloseAll::toString() const
@@ -407,9 +410,10 @@ BackupStudio::BackupStudio(){};
 
 void BackupStudio::act(Studio &studio)
 {
+    complete();
     delete backup;
     backup = new Studio(studio);
-    complete();
+    
 }
 
 std::string BackupStudio::toString() const
@@ -439,6 +443,8 @@ void RestoreStudio::act(Studio &studio)
     {
         studio = *backup;
         complete();
+        delete backup;
+        backup=nullptr;
     }
     else
     {

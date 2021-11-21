@@ -24,6 +24,7 @@ public:
     void setCalledAction(std::string action);
 protected:
     void complete();
+    void setstatus();
     void error(std::string errorMsg);
     std::string getErrorMsg() const;
 private:

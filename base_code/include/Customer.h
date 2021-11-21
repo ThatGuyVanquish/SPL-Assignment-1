@@ -15,7 +15,7 @@ public:
     virtual Customer* clone() = 0;
     bool orderStatus();
     void reqOrder();
-    virtual ~Customer();
+    // virtual ~Customer();
     const std::string name;
     const int id;
     bool hasOrdered;
@@ -27,7 +27,7 @@ public:
     std::vector<int> order(const std::vector<Workout> &workout_options);
     std::string toString() const;
     SweatyCustomer* clone() ;
-    ~SweatyCustomer();
+    // ~SweatyCustomer();
 private:
 };
 
@@ -38,7 +38,7 @@ public:
     std::vector<int> order(const std::vector<Workout> &workout_options);
     std::string toString() const;
     CheapCustomer* clone() ;
-    ~CheapCustomer();
+    // ~CheapCustomer();
 private:
 };
 
@@ -49,7 +49,7 @@ public:
     std::vector<int> order(const std::vector<Workout> &workout_options);
     std::string toString() const;
     HeavyMuscleCustomer* clone() ;
-    ~HeavyMuscleCustomer();
+    // ~HeavyMuscleCustomer();
 private:
     bool compareANne(Workout w1, Workout w2); // Comparator for vector sort
 };
@@ -61,7 +61,7 @@ public:
     std::vector<int> order(const std::vector<Workout> &workout_options);
     std::string toString() const;
     FullBodyCustomer* clone() ;
-    ~FullBodyCustomer();
+    // ~FullBodyCustomer();
 private:
 };
 
