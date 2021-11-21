@@ -258,7 +258,10 @@ void CloseAll::act(Studio &studio)
     for (int i = 0; i < studio.getNumOfTrainers(); i++)
     {
         Trainer *currTrain = studio.getTrainer(i);
-        cout << "Trainer " << i << " closed."<< " Salary " << std::to_string(currTrain->getSalary()) << "NIS" << endl;
+        if (currTrain->isOpen())
+        {
+            cout << "Trainer " << i << " closed."<< " Salary " << std::to_string(currTrain->getSalary()) << "NIS" << endl;
+        }
     }
     complete();
 }
