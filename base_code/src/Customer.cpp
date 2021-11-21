@@ -172,7 +172,7 @@ std::vector<int> HeavyMuscleCustomer::order(const std::vector<Workout>& workoutO
     {
         for (int j = 0; j < workoutOptions.size(); j++)
         {
-            if (workoutOptions[j].getPrice() == anaerobics[i])
+            if (workoutOptions[j].getPrice() == anaerobics[i] and workoutOptions[j].getType() == ANAEROBIC)
             {
                 ids.push_back(workoutOptions[j].getId());
                 break;
