@@ -7,10 +7,7 @@ using namespace std;
 extern Studio *backup;
 
 BaseAction::BaseAction()
-//errorMsg(nullptr),
-//calledAction(nullptr)
-{
-}
+{};
 
 ActionStatus BaseAction::getStatus() const
 {
@@ -49,11 +46,6 @@ std::string BaseAction::getErrorMsg() const
 {
     return errorMsg;
 }
-
-// void BaseAction::setStatus()
-// {
-//     complete();
-// }
 
 OpenTrainer::OpenTrainer(int _id, std::vector<Customer *> &customersList) : 
 BaseAction(),
@@ -124,7 +116,6 @@ void Order::act(Studio &studio)
             if (workouts.size() == 0)
             {
                 trainer->removeCustomer(customer->getId());
-              //  delete customer;
                 continue;
             }
             trainer->order(customer->getId(), workouts, studio.getWorkoutOptions());
@@ -133,7 +124,7 @@ void Order::act(Studio &studio)
                 cout << customer->getName() + " is doing " + studio.getWorkoutOptions()[i].getName() << endl;
             }
         }
-        complete(); // check if need to implement error checking
+        complete();
     }
 }
 
@@ -156,9 +147,11 @@ Order *Order::clone()
     return new Order(*this);
 }
 
-MoveCustomer::MoveCustomer(int src, int dst, int customerId) : srcTrainer(src),
-                                                               dstTrainer(dst),
-                                                               id(customerId){};
+MoveCustomer::MoveCustomer(int src, int dst, int customerId) : 
+srcTrainer(src),
+dstTrainer(dst),
+id(customerId)
+{};
 
 void MoveCustomer::act(Studio &studio)
 {
@@ -177,7 +170,7 @@ void MoveCustomer::act(Studio &studio)
             nextTrainer->order(id, workouts, workout_options);
         }
         nextTrainer->addCustomer(currentCustomer);
-        currTrainer->removeCustomerWithSalary(id, true);
+        currTrainer->removeCustomerWithSalary(id);
         complete();
         if (currTrainer->getCustomers().empty())
         {
@@ -225,13 +218,12 @@ void Close::act(Studio &studio)
         for (Customer* customer : trainer->getCustomers())
         {
             trainer->removeCustomer(customer->getId());
-            //delete customer;
         }
     
     trainer->closeTrainer();
     int tsal = trainer->getSalary();
     cout << "Trainer " + std::to_string(trainerId) + " closed. Salary " + std::to_string(tsal) + "NIS" << endl;
-  // delete trainer;
+    complete();
    }
 }
 
@@ -261,10 +253,9 @@ void CloseAll::act(Studio &studio)
     for (int i = 0; i < studio.getNumOfTrainers(); i++)
     {
         Trainer *currTrain = studio.getTrainer(i);
-        int currSalary;
         cout << "Trainer " << i << " closed."<< " Salary " << std::to_string(currTrain->getSalary()) << "NIS" << endl;
     }
-   
+    complete();
 }
 
 std::string CloseAll::toString() const
@@ -337,7 +328,6 @@ PrintTrainerStatus::PrintTrainerStatus(int id) : trainerId(id){};
 
 void PrintTrainerStatus::act(Studio &studio)
 {
-    // Assuming they never input a wrong number so there's no chance this gets into an error state, waiting for a forum answer
     Trainer *trainer = studio.getTrainer(trainerId);
     cout << "Trainer " + std::to_string(trainerId) + " status: " + trainer->getStatus() << endl;
     if (trainer->getStatus() == "open")
@@ -413,7 +403,6 @@ void BackupStudio::act(Studio &studio)
     complete();
     delete backup;
     backup = new Studio(studio);
-    
 }
 
 std::string BackupStudio::toString() const

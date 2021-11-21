@@ -23,7 +23,6 @@ public:
     void setCalledAction(std::string action); // Saves input in calledAction to be recalled in PrintActionsLog
 protected:
     void complete();
-    void setstatus();
     void error(std::string errorMsg);
     std::string getErrorMsg() const;
 private:
