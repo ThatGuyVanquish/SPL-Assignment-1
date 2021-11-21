@@ -14,6 +14,10 @@ ActionStatus BaseAction::getStatus() const
     return status;
 }
 
+void BaseAction::setStatus() {
+    status = COMPLETED;
+}
+
 void BaseAction::trigError(std::string err, std::string input)
 {
     error(err);

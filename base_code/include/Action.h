@@ -21,6 +21,7 @@ public:
     void trigError(std::string err, std::string input);
     std::string getCalledAction();
     void setCalledAction(std::string action); // Saves input in calledAction to be recalled in PrintActionsLog
+    void setStatus();
 protected:
     void complete();
     void error(std::string errorMsg);
