@@ -1,21 +1,45 @@
-#include "Studio.h"
-#include "Action.h"
+#include "../include/Studio.h"
+#include "../include/Action.h"
 #include <iostream>
 #include <fstream>
+
 using namespace std;
-Studio::Studio():open(false) {} // Empty constructor
 
-std::vector<std::string> *SplitSentence(const std::string &Sentence, char splt); // Forward declaration
+Studio::Studio():
+open(false)
+{} // Empty constructor
 
-Studio::Studio(const std::string &configFilePath):open(true)
+std::vector<std::string> *Studio::SplitSentence(const std::string &Sentence, char splt)
+{
+	std::string line("");
+	std::vector<std::string> *text_by_lines = new std::vector<std::string>();
+	char current_char;
+	for (int i = 0; i < static_cast<int>(Sentence.size()); i++)
+	{
+		current_char = Sentence[i];
+		if (current_char != splt)
+		{
+			line.push_back(current_char);
+		}
+		else
+		{
+			text_by_lines->push_back(line);
+			line = "";
+		}
+	}
+	text_by_lines->push_back(line);
+	return text_by_lines;
+}
+
+Studio::Studio(const std::string &configFilePath):
+open(true)
 { // Constructor with filepath
-	string Text;
+	std::string Text;
 	ifstream MyReadFile(configFilePath);
 	int data_type = 0;
 	std::string workout_name("");
 	WorkoutType workout;
 	std::string workoutTypeStr;
-	std::vector<std::string> *WordsFromCase_;
 	int workout_price;
 	int workoutId = 0;
 	while (getline(MyReadFile, Text))
@@ -40,22 +64,23 @@ Studio::Studio(const std::string &configFilePath):open(true)
 		}
 		else if (data_type == 3)
 		{
-			WordsFromCase_ = SplitSentence((Text), ',');
+			std::vector<std::string> *WordsFromCase_ = SplitSentence(Text, ',');
 			workout_name = (*WordsFromCase_)[0];
 			workoutTypeStr = (*WordsFromCase_)[1];
-			if (workoutTypeStr == "Anaerobic")
+			
+			if (workoutTypeStr == " Anaerobic")
 			{
 				workout = WorkoutType::ANAEROBIC;
 			}
-			if (workoutTypeStr == "Mixed")
+			else if (workoutTypeStr == " Mixed")
 			{
 				workout = WorkoutType::MIXED;
 			}
-			if (workoutTypeStr == "Cardio")
+		   	else if (workoutTypeStr == " Cardio")
 			{
 				workout = WorkoutType::CARDIO;
 			}
-			workout_price = stoi((*WordsFromCase_)[2]); // stoi function convert string to number.
+			workout_price = std::stoi((*WordsFromCase_)[2]); // stoi function convert string to number.
 			workout_options.push_back(Workout(workoutId, workout_name, workout_price, workout));
 			workoutId++;
 			delete WordsFromCase_;
@@ -66,16 +91,18 @@ Studio::Studio(const std::string &configFilePath):open(true)
 
 Studio::Studio(const Studio &StudioOther)
 { // Copy Constructor
-	for (int i = 0; i < StudioOther.trainers.size(); i++)
+	for (Trainer* trainer : StudioOther.trainers)
 	{
-		trainers.push_back(StudioOther.trainers[i]->clone());
+		trainers.push_back(trainer->clone());
 	}
-	for (int i = 0; i < StudioOther.actionsLog.size(); i++)
+	for (BaseAction* action : StudioOther.actionsLog)
 	{
-
-		actionsLog.push_back(StudioOther.actionsLog[i]->clone());
+		actionsLog.push_back(action->clone());
 	}
-	workout_options = StudioOther.workout_options;
+	for (Workout wrk : StudioOther.workout_options)
+	{
+		workout_options.push_back(Workout(wrk.getId(), wrk.getName(), wrk.getPrice(), wrk.getType()));
+	}
 }
 
 Studio Studio::operator=(const Studio &StudioOther)
@@ -86,41 +113,47 @@ Studio Studio::operator=(const Studio &StudioOther)
 	}
 	else
 	{
-		for (int i = 0; i < trainers.size(); i++)
+		for (Trainer* trainer : trainers)
 		{
-
-			delete trainers[i];
+			delete trainer;
 		}
-		for (int i = 0; i < StudioOther.trainers.size(); i++)
+		trainers.clear();
+		for (Trainer* trainer : StudioOther.trainers)
 		{
-
-			trainers.push_back(StudioOther.trainers[i]->clone());
+			trainers.push_back(trainer->clone());
 		}
-		for (int i = 0; i < actionsLog.size(); i++)
+		for (BaseAction* action : actionsLog)
 		{
-
-			delete actionsLog[i];
+			delete action;
 		}
-		for (int i = 0; i < StudioOther.actionsLog.size(); i++)
+		actionsLog.clear();
+		for (BaseAction* action: StudioOther.actionsLog)
 		{
-
-			actionsLog.push_back(StudioOther.actionsLog[i]->clone());
+			actionsLog.push_back(action->clone());
 		}
-		workout_options = StudioOther.workout_options;
+		workout_options.clear();
+		for (Workout wrk : StudioOther.workout_options)
+		{
+			workout_options.push_back(Workout(wrk.getId(), wrk.getName(), wrk.getPrice(), wrk.getType()));
+		}
 	}
+	return *this;
 }
 
 Studio::Studio(const Studio &&StudioOther)
 { // Move Constructor
-	for (int i = 0; i < StudioOther.trainers.size(); i++)
+	for (Trainer* trainer : StudioOther.trainers)
 	{
-		trainers.push_back(StudioOther.trainers[i]); // not sure we need clone because this is an rvalue ref
+		trainers.push_back(trainer);
 	}
-	for (int i = 0; i < StudioOther.actionsLog.size(); i++)
+	for (BaseAction* action : StudioOther.actionsLog)
 	{
-		actionsLog.push_back(StudioOther.actionsLog[i]); // not sure we need clone because this is an rvalue ref
+		actionsLog.push_back(action);
 	}
-	workout_options = StudioOther.workout_options;
+	for (Workout wrk : StudioOther.workout_options)
+	{
+		workout_options.push_back(wrk);
+	}
 }
 
 Studio Studio::operator=(const Studio &&StudioOther)
@@ -129,37 +162,45 @@ Studio Studio::operator=(const Studio &&StudioOther)
 	{
 		return *this;
 	}
-	for (int i = 0; i < trainers.size(); i++)
+	for (Trainer* trainer : trainers)
 	{
-		delete trainers[i];
+		delete trainer;
 	}
-	for (int i = 0; i < StudioOther.trainers.size(); i++)
+	trainers.clear();
+	for (Trainer* trainer : StudioOther.trainers)
 	{
-		trainers.push_back(StudioOther.trainers[i]); // not sure we need clone because this is an rvalue ref
+		trainers.push_back(trainer);
 	}
-	for (int i = 0; i < actionsLog.size(); i++)
+	for (BaseAction* action : actionsLog)
 	{
-		delete actionsLog[i];
+		delete action;
 	}
-	for (int i = 0; i < StudioOther.actionsLog.size(); i++)
+	actionsLog.clear();
+	for (BaseAction* action : StudioOther.actionsLog)
 	{
-		actionsLog.push_back(StudioOther.actionsLog[i]); // not sure we need clone because this is an rvalue ref
+		actionsLog.push_back(action);
 	}
-	workout_options = StudioOther.workout_options;
+	workout_options.clear();
+	for (Workout wrk : StudioOther.workout_options)
+	{
+		workout_options.push_back(wrk);
+	}
 	return *this;
 }
 
 Studio::~Studio()
 {
 	for (Trainer *tr : trainers)
-	{
-		delete tr;
+	{	
+			delete tr;	
 	}
+	trainers.clear();
 	for (BaseAction *ba : actionsLog)
 	{
 		delete ba;
 	}
-	workout_options.clear(); // Might be useless
+	actionsLog.clear();
+	//workout_options.clear(); // Might be useless
 }
 
 int Studio::getNumOfTrainers() const
@@ -168,7 +209,7 @@ int Studio::getNumOfTrainers() const
 }
 Trainer *Studio::getTrainer(int tid)
 {
-	if (tid < trainers.size())
+	if (tid < static_cast<int>(trainers.size()))
 	{
 		return trainers[tid];
 	}
@@ -187,85 +228,142 @@ std::vector<Workout> &Studio::getWorkoutOptions()
 
 bool Studio::canOpen(int tid, int numOfCustomers)
 {
-	return (tid < trainers.size() && not trainers[tid]->isOpen());
+	return (tid >= 0 and tid < static_cast<int>(trainers.size()) && not trainers[tid]->isOpen());
 }
 
 void Studio::start()
 {
 	std::cout << "The Studio is now open!" << std::endl;
 	int id = 0;
-	std::string text;
-	std::string word;
-	while (true) // Input loop, need to delete customers from here
+	open = true;
+	
+	while (open) // Input loop
 	{
-		cin >> text;
-		std::vector<string> *input = SplitSentence(text, ' ');
+		std::string sentence;
+		getline(cin, sentence);
+		std::vector<string> *input = Studio::SplitSentence(sentence, ' ');
 		if ((*input)[0] == "open")
 		{
+			vector<Customer *> customers;
 			if (not canOpen(std::stoi((*input)[1]), (*input).size() - 2))
 			{
 				std::vector<Customer *> failed;
-				OpenTrainer::OpenTrainer cantOpen(-1, failed);
-				cantOpen.trigError("Workout session does not exist or is already open.", text);
+				OpenTrainer cantOpen = OpenTrainer(-1, failed);
+				cantOpen.trigError("Workout session does not exist or is already open.", sentence);
+				actionsLog.push_back(new OpenTrainer(cantOpen));
+				delete input;
 				continue;
 			}
-			vector<Customer*> customers;
-			for (int i = 2; i < (*input).size(); i++)
+			
+			int tid = std::stoi((*input)[1]);
+			for (int i = 2; i < static_cast<int>((*input).size()); i++)
 			{
-				std::vector<string> *currentCustomer = SplitSentence((*input)[i], ',');
+				std::vector<string> *currentCustomer = Studio::SplitSentence((*input)[i], ',');
 				std::string name = (*currentCustomer)[0];
 				std::string type = (*currentCustomer)[1];
 				if (type == "swt")
 				{
-					SweatyCustomer *c = new SweatyCustomer(name, id);
-					customers.push_back(c);
-					id++;
+					customers.push_back(new SweatyCustomer(name, id));
 				}
 				else if (type == "chp")
 				{
-					CheapCustomer *c = new CheapCustomer(name, id);
-					customers.push_back(c);
-					id++;
+					customers.push_back(new CheapCustomer(name, id));
 				}
 				else if (type == "mcl")
 				{
-					HeavyMuscleCustomer *c = new HeavyMuscleCustomer(name, id);
-					customers.push_back(c);
-					id++;
+					customers.push_back(new HeavyMuscleCustomer(name, id));
 				}
-				else if (type == "fbc")
+				else if (type == "fbd")
 				{
-					FullBodyCustomer *c = new FullBodyCustomer(name, id);
-					customers.push_back(c);
-					id++;
+					customers.push_back(new FullBodyCustomer(name, id));
 				}
-				if (getTrainer(std::stoi((*input)[1]))->getRemainingSlots() == 0)
+				id++;
+				delete currentCustomer;
+				if (getTrainer(tid)->getCapacity() == static_cast<int>(customers.size()))
 				{
 					break;
 				}
 			}
-			int tid = std::stoi((*input)[1]);
-			OpenTrainer::OpenTrainer currentTrainer(tid, customers);
+			OpenTrainer currentTrainer(tid, customers);
 			currentTrainer.act(*this);
-			currentTrainer.setCalledAction(text);
-			actionsLog.push_back(new OpenTrainer(currentTrainer));
+			currentTrainer.setCalledAction(sentence);
+			std::vector<Customer*> empty;
+			OpenTrainer* push = new OpenTrainer(tid, empty);
+			push->setCalledAction(sentence);
+			push->setStatus();
+			actionsLog.push_back(push);
 		}
 		else if ((*input)[0] == "order")
 		{
 			int id = std::stoi((*input)[1]);
-			Order::Order currentOrder(id);
-			currentOrder.act(*this);
-			currentOrder.setCalledAction(text);
-			actionsLog.push_back(new Order(currentOrder));
+			Order* currentOrder = new Order(id);
+			currentOrder->act(*this);
+			currentOrder->setCalledAction(sentence);
+			actionsLog.push_back(currentOrder);
 		}
 		else if ((*input)[0] == "move")
 		{
 			int from = std::stoi((*input)[1]);
 			int to = std::stoi((*input)[2]);
 			int id = std::stoi((*input)[3]);
-			MoveCustomer::MoveCustomer currentMove(from, to, id);
-			currentMove.act(*this);
-			currentMove.setCalledAction(text);
-			actionsLog.push_back(new MoveCustomer(currentMove));
+			MoveCustomer* currentMove = new MoveCustomer(from, to, id);
+			currentMove->act(*this);
+			currentMove->setCalledAction(sentence);
+			actionsLog.push_back(currentMove);
 		}
+		else if ((*input)[0] == "close")
+		{
+			int tid = std::stoi((*input)[1]);;
+			Close* closeTrainer = new Close(tid);
+			closeTrainer->act(*this);
+			closeTrainer->setCalledAction(sentence);
+			actionsLog.push_back(closeTrainer);
+		}
+		else if ((*input)[0] == "closeall")
+		{
+		
+			CloseAll* close = new CloseAll();
+			close->act(*this);
+			close->setCalledAction(sentence);
+			actionsLog.push_back(close);
+			open = false;
+		}
+		else if ((*input)[0] == "workout_options")
+		{
+			PrintWorkoutOptions* prt = new PrintWorkoutOptions();
+			prt->act(*this);
+			prt->setCalledAction(sentence);
+			actionsLog.push_back(prt);
+		}
+		else if ((*input)[0] == "status")
+		{
+			int tid = std::stoi((*input)[1]);
+			PrintTrainerStatus* prt = new PrintTrainerStatus(tid);
+			prt->act(*this);
+			prt->setCalledAction(sentence);
+			actionsLog.push_back(prt);
+		}
+		else if ((*input)[0] == "log")
+		{
+			PrintActionsLog* prt = new PrintActionsLog();
+			prt->act(*this);
+			prt->setCalledAction(sentence);
+			actionsLog.push_back(prt);
+		}
+		else if ((*input)[0] == "backup")
+		{
+			BackupStudio* bck = new BackupStudio();
+			bck->setCalledAction(sentence);
+			actionsLog.push_back(bck);
+			bck->act(*this);
+		}
+		else if ((*input)[0] == "restore")
+		{
+			RestoreStudio* rst = new RestoreStudio();
+			rst->act(*this);
+			rst->setCalledAction(sentence);
+			actionsLog.push_back(rst);
+		}
+	delete input;
 	}
+}

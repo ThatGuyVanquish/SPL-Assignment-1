@@ -117,17 +117,19 @@ Studio Studio::operator=(const Studio &StudioOther)
 		{
 			delete trainer;
 		}
+		trainers.clear();
 		for (Trainer* trainer : StudioOther.trainers)
 		{
-			trainers.push_back(trainer);
+			trainers.push_back(trainer->clone());
 		}
 		for (BaseAction* action : actionsLog)
 		{
 			delete action;
 		}
+		actionsLog.clear();
 		for (BaseAction* action: StudioOther.actionsLog)
 		{
-			actionsLog.push_back(action);
+			actionsLog.push_back(action->clone());
 		}
 		workout_options.clear();
 		for (Workout wrk : StudioOther.workout_options)
@@ -164,6 +166,7 @@ Studio Studio::operator=(const Studio &&StudioOther)
 	{
 		delete trainer;
 	}
+	trainers.clear();
 	for (Trainer* trainer : StudioOther.trainers)
 	{
 		trainers.push_back(trainer);
@@ -172,6 +175,7 @@ Studio Studio::operator=(const Studio &&StudioOther)
 	{
 		delete action;
 	}
+	actionsLog.clear();
 	for (BaseAction* action : StudioOther.actionsLog)
 	{
 		actionsLog.push_back(action);
@@ -187,17 +191,15 @@ Studio Studio::operator=(const Studio &&StudioOther)
 Studio::~Studio()
 {
 	for (Trainer *tr : trainers)
-	{
-		if (tr)
-		{
-			delete tr;
-		}
+	{	
+			delete tr;	
 	}
-	
+	trainers.clear();
 	for (BaseAction *ba : actionsLog)
 	{
 		delete ba;
 	}
+	actionsLog.clear();
 	//workout_options.clear(); // Might be useless
 }
 
@@ -234,7 +236,7 @@ void Studio::start()
 	std::cout << "The Studio is now open!" << std::endl;
 	int id = 0;
 	open = true;
-	vector<Customer *> customers;
+	
 	while (open) // Input loop
 	{
 		std::string sentence;
@@ -242,12 +244,14 @@ void Studio::start()
 		std::vector<string> *input = Studio::SplitSentence(sentence, ' ');
 		if ((*input)[0] == "open")
 		{
+			vector<Customer *> customers;
 			if (not canOpen(std::stoi((*input)[1]), (*input).size() - 2))
 			{
 				std::vector<Customer *> failed;
 				OpenTrainer cantOpen = OpenTrainer(-1, failed);
 				cantOpen.trigError("Workout session does not exist or is already open.", sentence);
 				actionsLog.push_back(new OpenTrainer(cantOpen));
+				delete input;
 				continue;
 			}
 			
@@ -292,73 +296,73 @@ void Studio::start()
 		else if ((*input)[0] == "order")
 		{
 			int id = std::stoi((*input)[1]);
-			Order currentOrder = Order(id);
-			currentOrder.act(*this);
-			currentOrder.setCalledAction(sentence);
-			actionsLog.push_back(new Order(currentOrder));
+			Order* currentOrder = new Order(id);
+			currentOrder->act(*this);
+			currentOrder->setCalledAction(sentence);
+			actionsLog.push_back(currentOrder);
 		}
 		else if ((*input)[0] == "move")
 		{
 			int from = std::stoi((*input)[1]);
 			int to = std::stoi((*input)[2]);
 			int id = std::stoi((*input)[3]);
-			MoveCustomer currentMove = MoveCustomer(from, to, id);
-			currentMove.act(*this);
-			currentMove.setCalledAction(sentence);
-			actionsLog.push_back(new MoveCustomer(currentMove));
+			MoveCustomer* currentMove = new MoveCustomer(from, to, id);
+			currentMove->act(*this);
+			currentMove->setCalledAction(sentence);
+			actionsLog.push_back(currentMove);
 		}
 		else if ((*input)[0] == "close")
 		{
 			int tid = std::stoi((*input)[1]);;
-			Close closeTrainer = Close(tid);
-			closeTrainer.act(*this);
-			closeTrainer.setCalledAction(sentence);
-			actionsLog.push_back(new Close(closeTrainer));
+			Close* closeTrainer = new Close(tid);
+			closeTrainer->act(*this);
+			closeTrainer->setCalledAction(sentence);
+			actionsLog.push_back(closeTrainer);
 		}
 		else if ((*input)[0] == "closeall")
 		{
 		
-			CloseAll close = CloseAll();
-			close.act(*this);
-			close.setCalledAction(sentence);
-			actionsLog.push_back(new CloseAll(close));
+			CloseAll* close = new CloseAll();
+			close->act(*this);
+			close->setCalledAction(sentence);
+			actionsLog.push_back(close);
 			open = false;
 		}
 		else if ((*input)[0] == "workout_options")
 		{
-			PrintWorkoutOptions prt = PrintWorkoutOptions();
-			prt.act(*this);
-			prt.setCalledAction(sentence);
-			actionsLog.push_back(new PrintWorkoutOptions(prt));
+			PrintWorkoutOptions* prt = new PrintWorkoutOptions();
+			prt->act(*this);
+			prt->setCalledAction(sentence);
+			actionsLog.push_back(prt);
 		}
 		else if ((*input)[0] == "status")
 		{
 			int tid = std::stoi((*input)[1]);
-			PrintTrainerStatus prt = PrintTrainerStatus(tid);
-			prt.act(*this);
-			prt.setCalledAction(sentence);
-			actionsLog.push_back(new PrintTrainerStatus(prt));
+			PrintTrainerStatus* prt = new PrintTrainerStatus(tid);
+			prt->act(*this);
+			prt->setCalledAction(sentence);
+			actionsLog.push_back(prt);
 		}
 		else if ((*input)[0] == "log")
 		{
-			PrintActionsLog prt = PrintActionsLog();
-			prt.act(*this);
-			prt.setCalledAction(sentence);
-			actionsLog.push_back(new PrintActionsLog(prt));
+			PrintActionsLog* prt = new PrintActionsLog();
+			prt->act(*this);
+			prt->setCalledAction(sentence);
+			actionsLog.push_back(prt);
 		}
 		else if ((*input)[0] == "backup")
 		{
-			BackupStudio bck = BackupStudio();
-			bck.act(*this);
-			bck.setCalledAction(sentence);
-			actionsLog.push_back(new BackupStudio(bck));
+			BackupStudio* bck = new BackupStudio();
+			bck->setCalledAction(sentence);
+			actionsLog.push_back(bck);
+			bck->act(*this);
 		}
 		else if ((*input)[0] == "restore")
 		{
-			RestoreStudio rst = RestoreStudio();
-			rst.act(*this);
-			rst.setCalledAction(sentence);
-			actionsLog.push_back(new RestoreStudio(rst));
+			RestoreStudio* rst = new RestoreStudio();
+			rst->act(*this);
+			rst->setCalledAction(sentence);
+			actionsLog.push_back(rst);
 		}
 	delete input;
 	}

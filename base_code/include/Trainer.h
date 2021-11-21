@@ -9,23 +9,23 @@ typedef std::pair<int, Workout> OrderPair;
 
 class Trainer{
 public:
-    Trainer(int t_capacity);
-    Trainer(const Trainer& t);
-    Trainer& operator=(const Trainer& t);
-    Trainer(const Trainer&& t);
-    Trainer& operator=(const Trainer&& t);
-    ~Trainer();
+    Trainer(int t_capacity); // Constructor
+    Trainer(const Trainer& t); // Copy Constructor
+    Trainer& operator=(const Trainer& t); // Copy assignment
+    Trainer(const Trainer&& t); // Move Constructor
+    Trainer& operator=(const Trainer&& t); // Move assignment
+    ~Trainer(); // Destructor
     int getCapacity() const;
     Customer* getCustomer(int id);
     std::vector<Customer*>& getCustomers();
     std::vector<OrderPair>& getOrders();
     int getSalary() const;
-    void removeOrders(int cid, bool salary);
+    void removeOrders(int cid, bool sal); // Removes orders, boolean as a check to reduce salary or not.
     void addOrder(OrderPair order);
     bool isOpen() const;
     void addCustomer(Customer* customer);
     void removeCustomer(int id);
-    void removeCustomerWithSalary(int id, bool salary);
+    void removeCustomerWithSalary(int id); // Removes customer and reduces salary (removeOrders(cid, true))
     void order(const int customer_id, const std::vector<int> workout_ids, const std::vector<Workout>& workout_options);
     void openTrainer();
     void closeTrainer();

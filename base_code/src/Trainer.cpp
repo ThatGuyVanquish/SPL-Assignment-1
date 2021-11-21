@@ -9,17 +9,21 @@ Trainer::Trainer(int t_capacity):
     capacity(t_capacity),
     open(false),
     customersList(),
-    orderList()
+    orderList(),
+    salary(0)
     {};
 
 // Copy Constructor
 Trainer::Trainer(const Trainer& t): 
-    capacity(t.capacity), 
-    open(t.open),
+    capacity(), 
+    open(),
     customersList(),
     orderList(),
-    salary(t.salary)
+    salary()
     {
+        capacity = t.getCapacity();
+        open = t.isOpen();
+        salary = t.getSalary();
         for (Customer* customer : t.customersList)
         {
             customersList.push_back(customer->clone());
@@ -49,7 +53,7 @@ Trainer& Trainer::operator=(const Trainer& t)
             orderList.push_back(OrderPair(order.first, order.second));
         }
     }
-    return *this;
+   // return *this;
 }
 
 // Move Constructor
@@ -106,32 +110,31 @@ Trainer* Trainer::clone()
 
 Trainer::~Trainer()
 {
-    open = NULL;
-    salary = 0;
-    capacity = 0;
     for (Customer* customer : customersList)
     {
         delete customer;
     }
-    customersList.clear();
-    //orderList.clear();
 }
 
 int Trainer::getCapacity() const 
-    {
-        return capacity;
-    }
+{
+    return capacity;
+}
 
 int Trainer::getRemainingSlots() const
-    {
-        return capacity-customersList.size();
-    }
+{
+    return capacity-customersList.size();
+}
 
 Customer* Trainer::getCustomer(int id)
 {
     for (Customer*& c : customersList)
+    {
         if (c->getId() == id)
+        {
             return c;
+        }
+    }
     return nullptr;
 }
 
@@ -194,12 +197,14 @@ void Trainer::removeOrders(int cid, bool sal)
 void Trainer::removeCustomer(int id) 
 {
     int pos = 0;
-    for (Customer*& customer : customersList)
+    for (Customer* customer : customersList)
     {
-        if (customer->getId() == id)
+        if (id == customer->getId())
             {
-                delete customer;
+        
+                
                 customersList.erase(customersList.begin() + pos);
+                delete customer;
                 break;
             }
         pos++;
@@ -207,7 +212,7 @@ void Trainer::removeCustomer(int id)
     removeOrders(id, false);
 }
 
-void Trainer::removeCustomerWithSalary(int cid, bool salary)
+void Trainer::removeCustomerWithSalary(int cid)
 {
     removeOrders(cid, true);
     int pos = 0;
