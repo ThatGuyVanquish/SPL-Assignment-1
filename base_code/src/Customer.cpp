@@ -3,7 +3,6 @@
 #include <iostream> 
 using namespace std;
 
-// Concstructor
 Customer::Customer(std::string c_name, int c_id):
     name(c_name),
     id(c_id),
@@ -30,36 +29,12 @@ void Customer::reqOrder()
     hasOrdered = true;
 }
 
-// Customer::~Customer()
-// {
-//     cout<<"delcustomer"<<endl;
-// }
-
-bool compareAnae(Workout w1, Workout w2)
-{
-    if (w1.getType() == ANAEROBIC)
-    {
-        if (w2.getType() != ANAEROBIC)
-            return false;
-        else
-        {
-            return w1.getPrice() < w2.getPrice();
-        }
-    }
-    else if (w2.getType() == ANAEROBIC)
-    {
-        return true;
-    }
-    return false;;
-}
-
 /*
 **** Sweaty Customer ****
 Order strategy:
 Orders all of the available cardio workouts, by the order they've been received in the config file.
 */
 
-// Constructor
 SweatyCustomer::SweatyCustomer(std::string name, int id): 
     Customer::Customer(name, id)
     {};
@@ -88,18 +63,12 @@ std::string SweatyCustomer::toString() const
     return getId() + " " + getName();
 }
 
-// SweatyCustomer::~SweatyCustomer()
-// {
-//     cout<<"sweatydel"<<endl;
-// }
-
 /*
 **** Cheap Customer ****
 Order strategy:
 Orders cheapest workout available.
 */
 
-// Constructor
 CheapCustomer::CheapCustomer(std::string name, int id): 
     Customer::Customer(name, id)
 {};
@@ -132,18 +101,12 @@ std::string CheapCustomer::toString() const
     return getId() + " " + getName();
 }
 
-// CheapCustomer::~CheapCustomer()
-// {
-//     cout<<"cheapdel"<<endl;
-// }
-
 /*
 **** Heavy Muscle Customer ****
 Order strategy:
 Anaerobic workouts from most expensive to cheapest.
 */
 
-//  Constructor
 HeavyMuscleCustomer::HeavyMuscleCustomer(std::string name, int id): 
     Customer::Customer(name, id)
 {};
@@ -168,14 +131,13 @@ std::vector<int> HeavyMuscleCustomer::order(const std::vector<Workout>& workoutO
     }
     std::sort(anaerobics.begin(), anaerobics.end());
     std::vector<int> ids;
-    for (int i = 0; i < anaerobics.size(); i++)
+    for (int price : anaerobics)
     {
-        for (int j = 0; j < workoutOptions.size(); j++)
+        for (Workout workout : workoutOptions)
         {
-            if (workoutOptions[j].getPrice() == anaerobics[i] and workoutOptions[j].getType() == ANAEROBIC)
+            if (workout.getPrice() == price and workout.getType() == ANAEROBIC)
             {
-                
-                ids.push_back(workoutOptions[j].getId());
+                ids.push_back(workout.getId());
                 break;
             }
         }
@@ -190,11 +152,6 @@ std::string HeavyMuscleCustomer::toString() const
     return getId() + " " + getName();
 }
 
-// HeavyMuscleCustomer::~HeavyMuscleCustomer()
-// {
-//     cout<<"heavydel"<<endl;
-// }
-
 /*
 **** Full Body Customer ****
 Order strategy:
@@ -203,7 +160,6 @@ Order strategy:
 3. Cheapest anaerobic
 */
 
-// Constructor
 FullBodyCustomer::FullBodyCustomer(std::string name, int id): 
     Customer::Customer(name, id)
 {};
@@ -272,8 +228,3 @@ std::string FullBodyCustomer::toString() const
 {
     return getId() + " " + getName();
 }
-
-// FullBodyCustomer::~FullBodyCustomer()
-// {
-//     cout<<"fulldel"<<endl;
-// }

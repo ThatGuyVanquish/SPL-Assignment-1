@@ -9,7 +9,6 @@ enum ActionStatus{
     COMPLETED, ERROR
 };
 
-//Forward declaration
 class Studio;
 
 class BaseAction{
@@ -21,7 +20,7 @@ public:
     ActionStatus getStatus() const;
     void trigError(std::string err, std::string input);
     std::string getCalledAction();
-    void setCalledAction(std::string action);
+    void setCalledAction(std::string action); // Saves input in calledAction to be recalled in PrintActionsLog
 protected:
     void complete();
     void setstatus();

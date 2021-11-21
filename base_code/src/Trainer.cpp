@@ -209,7 +209,7 @@ void Trainer::removeCustomer(int id)
     removeOrders(id, false);
 }
 
-void Trainer::removeCustomerWithSalary(int cid, bool salary)
+void Trainer::removeCustomerWithSalary(int cid)
 {
     removeOrders(cid, true);
     int pos = 0;
