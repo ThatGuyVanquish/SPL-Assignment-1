@@ -105,7 +105,7 @@ Studio::Studio(const Studio &StudioOther)
 	}
 }
 
-Studio Studio::operator=(const Studio &StudioOther)
+Studio& Studio::operator=(const Studio &StudioOther)
 { // Copy assignment
 	if (this == &StudioOther)
 	{ //self assgiment
@@ -156,7 +156,7 @@ Studio::Studio(const Studio &&StudioOther)
 	}
 }
 
-Studio Studio::operator=(const Studio &&StudioOther)
+Studio& Studio::operator=(const Studio &&StudioOther)
 { // Move assigment
 	if (this == &StudioOther)
 	{
