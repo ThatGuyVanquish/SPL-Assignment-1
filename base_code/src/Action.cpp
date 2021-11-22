@@ -9,6 +9,8 @@ extern Studio *backup;
 BaseAction::BaseAction()
 {};
 
+BaseAction::~BaseAction(){}
+
 ActionStatus BaseAction::getStatus() const
 {
     return status;
@@ -57,6 +59,8 @@ trainerId(_id),
 customers(customersList)
 {};
 
+OpenTrainer::~OpenTrainer(){}
+
 std::vector<Customer*> OpenTrainer::getCustomers()
 {
     return customers;
@@ -99,7 +103,11 @@ OpenTrainer *OpenTrainer::clone()
     return new OpenTrainer(*this);
 }
 
-Order::Order(int id) : trainerId(id){};
+Order::Order(int id): 
+trainerId(id)
+{};
+
+Order::~Order(){};
 
 void Order::act(Studio &studio)
 {
@@ -157,13 +165,15 @@ dstTrainer(dst),
 id(customerId)
 {};
 
+MoveCustomer::~MoveCustomer(){}
+
 void MoveCustomer::act(Studio &studio)
 {
     Trainer *currTrainer = studio.getTrainer(srcTrainer);
     Trainer *nextTrainer = studio.getTrainer(dstTrainer);
     if (currTrainer != nullptr and currTrainer->isOpen() and                  // Source trainer exists and is open
         nextTrainer != nullptr and nextTrainer->isOpen() and                  // Destination trainer exists and is open
-        (nextTrainer->getCustomers()).size() < nextTrainer->getCapacity() and // Destination has room for customers
+        (static_cast<int>(nextTrainer->getCustomers().size())) < nextTrainer->getCapacity() and // Destination has room for customers
         currTrainer->getCustomer(id) != nullptr)                              // Customer exists in source trainer's list
     {
         std::vector<Workout> workout_options = studio.getWorkoutOptions();
@@ -210,6 +220,8 @@ Close::Close(int id):
 trainerId(id)
 {};
 
+Close::~Close(){}
+
 void Close::act(Studio &studio)
 {
     vector<Customer*> temp;
@@ -253,6 +265,8 @@ Close *Close::clone()
 
 CloseAll::CloseAll(){};
 
+CloseAll::~CloseAll(){}
+
 void CloseAll::act(Studio &studio)
 {
     for (int i = 0; i < studio.getNumOfTrainers(); i++)
@@ -286,6 +300,8 @@ CloseAll *CloseAll::clone()
 }
 
 PrintWorkoutOptions::PrintWorkoutOptions(){};
+
+PrintWorkoutOptions::~PrintWorkoutOptions(){}
 
 void PrintWorkoutOptions::act(Studio &studio)
 {
@@ -334,6 +350,8 @@ PrintWorkoutOptions *PrintWorkoutOptions::clone()
 
 PrintTrainerStatus::PrintTrainerStatus(int id) : trainerId(id){};
 
+PrintTrainerStatus::~PrintTrainerStatus(){}
+
 void PrintTrainerStatus::act(Studio &studio)
 {
     Trainer *trainer = studio.getTrainer(trainerId);
@@ -376,6 +394,8 @@ PrintTrainerStatus *PrintTrainerStatus::clone()
 
 PrintActionsLog::PrintActionsLog(){};
 
+PrintActionsLog::~PrintActionsLog(){}
+
 void PrintActionsLog::act(Studio &studio)
 {
     for (BaseAction *action : studio.getActionsLog())
@@ -406,6 +426,8 @@ PrintActionsLog *PrintActionsLog::clone()
 
 BackupStudio::BackupStudio(){};
 
+BackupStudio::~BackupStudio(){}
+
 void BackupStudio::act(Studio &studio)
 {
     complete();
@@ -433,6 +455,8 @@ BackupStudio *BackupStudio::clone()
 }
 
 RestoreStudio::RestoreStudio(){};
+
+RestoreStudio::~RestoreStudio(){}
 
 void RestoreStudio::act(Studio &studio)
 {

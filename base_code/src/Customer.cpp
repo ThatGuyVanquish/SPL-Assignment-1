@@ -9,6 +9,8 @@ Customer::Customer(std::string c_name, int c_id):
     hasOrdered(false)
     {};
 
+Customer::~Customer(){}
+
 std::string Customer::getName() const 
 {
     return name;

@@ -53,7 +53,7 @@ Trainer& Trainer::operator=(const Trainer& t)
             orderList.push_back(OrderPair(order.first, order.second));
         }
     }
-   // return *this;
+    return *this;
 }
 
 // Move Constructor
