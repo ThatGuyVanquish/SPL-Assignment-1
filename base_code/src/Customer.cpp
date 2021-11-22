@@ -145,8 +145,20 @@ std::vector<int> HeavyMuscleCustomer::order(const std::vector<Workout>& workoutO
         {
             if (workout.getPrice() == price and workout.getType() == ANAEROBIC)
             {
-                ids.push_back(workout.getId());
-                break;
+                bool exists = false;
+                for (int id : ids)
+                {
+                    if (workout.getId() == id)
+                    {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (not exists)
+                {
+                    ids.push_back(workout.getId());
+                    break;
+                }
             }
         }
     }
