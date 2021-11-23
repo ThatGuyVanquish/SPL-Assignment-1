@@ -203,7 +203,6 @@ Studio::~Studio()
 		delete ba;
 	}
 	actionsLog.clear();
-	//workout_options.clear(); // Might be useless
 }
 
 int Studio::getNumOfTrainers() const
@@ -308,14 +307,10 @@ void Studio::start()
 			}
 			if (!customers.empty())
 			{
-				OpenTrainer currentTrainer(tid, customers);
-				currentTrainer.act(*this);
-				currentTrainer.setCalledAction(inserted);
-				std::vector<Customer*> empty;
-				OpenTrainer* push = new OpenTrainer(tid, empty);
-				push->setCalledAction(inserted);
-				push->setStatus();
-				actionsLog.push_back(push);
+				OpenTrainer* currentTrainer = new OpenTrainer(tid, customers);
+				currentTrainer->act(*this);
+				currentTrainer->setCalledAction(inserted);
+				actionsLog.push_back(currentTrainer);
 			}
 		}
 		else if ((*input)[0] == "order")

@@ -61,10 +61,6 @@ customers(customersList)
 
 OpenTrainer::~OpenTrainer()
 {
-    for (Customer* customer: customers)
-    {
-        delete customer;
-    }
     customers.clear();
 }
 
