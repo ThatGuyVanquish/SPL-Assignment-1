@@ -2,6 +2,7 @@
 #include "../include/Action.h"
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 
 using namespace std;
 
@@ -89,7 +90,8 @@ open(true)
 	MyReadFile.close();
 }
 
-Studio::Studio(const Studio &StudioOther)
+Studio::Studio(const Studio &StudioOther): 
+open(StudioOther.open)
 { // Copy Constructor
 	for (Trainer* trainer : StudioOther.trainers)
 	{
@@ -140,7 +142,8 @@ Studio& Studio::operator=(const Studio &StudioOther)
 	return *this;
 }
 
-Studio::Studio(const Studio &&StudioOther)
+Studio::Studio(const Studio &&StudioOther):
+open(StudioOther.open)
 { // Move Constructor
 	for (Trainer* trainer : StudioOther.trainers)
 	{
@@ -244,6 +247,11 @@ void Studio::start()
 		std::vector<string> *input = Studio::SplitSentence(sentence, ' ');
 		if ((*input)[0] == "open")
 		{
+			if (static_cast<int>((*input).size()) <= 2)
+			{
+				delete input;
+				continue;
+			}
 			vector<Customer *> customers;
 			if (not canOpen(std::stoi((*input)[1]), (*input).size() - 2))
 			{
@@ -254,47 +262,94 @@ void Studio::start()
 				delete input;
 				continue;
 			}
-			
 			int tid = std::stoi((*input)[1]);
+			std::string inserted = "open " + (*input)[1];
 			for (int i = 2; i < static_cast<int>((*input).size()); i++)
 			{
 				std::vector<string> *currentCustomer = Studio::SplitSentence((*input)[i], ',');
+				if (static_cast<int>(currentCustomer->size()) == 1)
+				{
+					delete currentCustomer;
+					continue;
+				}
 				std::string name = (*currentCustomer)[0];
 				std::string type = (*currentCustomer)[1];
+				bool pushed = false;
 				if (type == "swt")
 				{
 					customers.push_back(new SweatyCustomer(name, id));
+					pushed = true;
 				}
 				else if (type == "chp")
 				{
 					customers.push_back(new CheapCustomer(name, id));
+					pushed = true;
 				}
 				else if (type == "mcl")
 				{
 					customers.push_back(new HeavyMuscleCustomer(name, id));
+					pushed = true;
 				}
 				else if (type == "fbd")
 				{
 					customers.push_back(new FullBodyCustomer(name, id));
+					pushed = true;
 				}
-				id++;
 				delete currentCustomer;
+				if (pushed)
+				{
+					inserted = inserted + " " + (*input)[i];
+					id++;
+				}
 				if (getTrainer(tid)->getCapacity() == static_cast<int>(customers.size()))
 				{
 					break;
 				}
 			}
-			OpenTrainer currentTrainer(tid, customers);
-			currentTrainer.act(*this);
-			currentTrainer.setCalledAction(sentence);
-			std::vector<Customer*> empty;
-			OpenTrainer* push = new OpenTrainer(tid, empty);
-			push->setCalledAction(sentence);
-			push->setStatus();
-			actionsLog.push_back(push);
+			if (!customers.empty())
+			{
+				OpenTrainer currentTrainer(tid, customers);
+				currentTrainer.act(*this);
+				currentTrainer.setCalledAction(inserted);
+				std::vector<Customer*> empty;
+				OpenTrainer* push = new OpenTrainer(tid, empty);
+				push->setCalledAction(inserted);
+				push->setStatus();
+				actionsLog.push_back(push);
+			}
 		}
 		else if ((*input)[0] == "order")
 		{
+			if (static_cast<int>((*input).size()) == 1)
+			{
+				delete input;
+				continue;
+			}
+			else
+			{
+				bool isNum = true;
+				for (char ch : (*input)[1])
+				{
+					if (not std::isdigit(ch))
+					{
+						isNum = false;
+						break;
+					}
+				}
+				if (isNum)
+				{
+					if (std::stoi((*input)[1]) >= getNumOfTrainers())
+					{
+						delete input;
+						continue;
+					}
+				}
+				else 
+				{
+					delete input;
+					continue;
+				}
+			}
 			int id = std::stoi((*input)[1]);
 			Order* currentOrder = new Order(id);
 			currentOrder->act(*this);
