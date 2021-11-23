@@ -59,7 +59,14 @@ trainerId(_id),
 customers(customersList)
 {};
 
-OpenTrainer::~OpenTrainer(){}
+OpenTrainer::~OpenTrainer()
+{
+    for (Customer* customer: customers)
+    {
+        delete customer;
+    }
+    customers.clear();
+}
 
 std::vector<Customer*> OpenTrainer::getCustomers()
 {
