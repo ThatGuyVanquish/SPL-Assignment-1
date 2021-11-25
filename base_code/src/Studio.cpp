@@ -7,7 +7,8 @@
 using namespace std;
 
 Studio::Studio():
-open(false)
+open(false),
+_cid(0)
 {} // Empty constructor
 
 std::vector<std::string> *Studio::SplitSentence(const std::string &Sentence, char splt)
@@ -33,7 +34,8 @@ std::vector<std::string> *Studio::SplitSentence(const std::string &Sentence, cha
 }
 
 Studio::Studio(const std::string &configFilePath):
-open(true)
+open(true),
+_cid(0)
 { // Constructor with filepath
 	std::string Text;
 	ifstream MyReadFile(configFilePath);
@@ -91,7 +93,8 @@ open(true)
 }
 
 Studio::Studio(const Studio &StudioOther): 
-open(StudioOther.open)
+open(StudioOther.open),
+_cid(StudioOther._cid)
 { // Copy Constructor
 	for (Trainer* trainer : StudioOther.trainers)
 	{
@@ -115,6 +118,8 @@ Studio& Studio::operator=(const Studio &StudioOther)
 	}
 	else
 	{
+		open = StudioOther.open;
+		_cid = StudioOther._cid;
 		for (Trainer* trainer : trainers)
 		{
 			delete trainer;
@@ -143,7 +148,8 @@ Studio& Studio::operator=(const Studio &StudioOther)
 }
 
 Studio::Studio(const Studio &&StudioOther):
-open(StudioOther.open)
+open(StudioOther.open),
+_cid(StudioOther._cid)
 { // Move Constructor
 	for (Trainer* trainer : StudioOther.trainers)
 	{
@@ -165,6 +171,8 @@ Studio& Studio::operator=(const Studio &&StudioOther)
 	{
 		return *this;
 	}
+	open = StudioOther.open;
+	_cid = StudioOther._cid;
 	for (Trainer* trainer : trainers)
 	{
 		delete trainer;
@@ -236,7 +244,7 @@ bool Studio::canOpen(int tid, int numOfCustomers)
 void Studio::start()
 {
 	std::cout << "The Studio is now open!" << std::endl;
-	int id = 0;
+	//int id = 0;
 	open = true;
 	
 	while (open) // Input loop
@@ -276,29 +284,29 @@ void Studio::start()
 				bool pushed = false;
 				if (type == "swt")
 				{
-					customers.push_back(new SweatyCustomer(name, id));
+					customers.push_back(new SweatyCustomer(name, _cid));
 					pushed = true;
 				}
 				else if (type == "chp")
 				{
-					customers.push_back(new CheapCustomer(name, id));
+					customers.push_back(new CheapCustomer(name, _cid));
 					pushed = true;
 				}
 				else if (type == "mcl")
 				{
-					customers.push_back(new HeavyMuscleCustomer(name, id));
+					customers.push_back(new HeavyMuscleCustomer(name, _cid));
 					pushed = true;
 				}
 				else if (type == "fbd")
 				{
-					customers.push_back(new FullBodyCustomer(name, id));
+					customers.push_back(new FullBodyCustomer(name, _cid));
 					pushed = true;
 				}
 				delete currentCustomer;
 				if (pushed)
 				{
 					inserted = inserted + " " + (*input)[i];
-					id++;
+					_cid++;
 				}
 				if (getTrainer(tid)->getCapacity() == static_cast<int>(customers.size()))
 				{

@@ -25,6 +25,7 @@ public:
     bool canOpen(int tid, int numOfCustomers); // Checks if trainer can be opened
 private:
     bool open;
+    int _cid;
     std::vector<Trainer*> trainers;
     std::vector<Workout> workout_options;
     std::vector<BaseAction*> actionsLog;
