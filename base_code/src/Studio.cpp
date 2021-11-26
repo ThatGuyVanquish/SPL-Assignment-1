@@ -359,7 +359,7 @@ void Studio::start()
 			int id = std::stoi((*input)[1]);
 			Order* currentOrder = new Order(id);
 			currentOrder->act(*this);
-			currentOrder->setCalledAction(sentence);
+			currentOrder->setCalledAction("order " + (*input)[1]);
 			actionsLog.push_back(currentOrder);
 		}
 		else if ((*input)[0] == "move")
@@ -374,7 +374,7 @@ void Studio::start()
 			int id = std::stoi((*input)[3]);
 			MoveCustomer* currentMove = new MoveCustomer(from, to, id);
 			currentMove->act(*this);
-			currentMove->setCalledAction(sentence);
+			currentMove->setCalledAction("move " + (*input)[1] + " " + (*input)[2] + " " + (*input)[3]);
 			actionsLog.push_back(currentMove);
 		}
 		else if ((*input)[0] == "close")
@@ -387,14 +387,14 @@ void Studio::start()
 			int tid = std::stoi((*input)[1]);;
 			Close* closeTrainer = new Close(tid);
 			closeTrainer->act(*this);
-			closeTrainer->setCalledAction(sentence);
+			closeTrainer->setCalledAction("close " + (*input)[1]);
 			actionsLog.push_back(closeTrainer);
 		}
 		else if ((*input)[0] == "closeall")
 		{
 			CloseAll* close = new CloseAll();
 			close->act(*this);
-			close->setCalledAction(sentence);
+			close->setCalledAction("closeall");
 			actionsLog.push_back(close);
 			open = false;
 		}
@@ -402,7 +402,7 @@ void Studio::start()
 		{
 			PrintWorkoutOptions* prt = new PrintWorkoutOptions();
 			prt->act(*this);
-			prt->setCalledAction(sentence);
+			prt->setCalledAction("workout_options");
 			actionsLog.push_back(prt);
 		}
 		else if ((*input)[0] == "status")
@@ -415,20 +415,20 @@ void Studio::start()
 			int tid = std::stoi((*input)[1]);
 			PrintTrainerStatus* prt = new PrintTrainerStatus(tid);
 			prt->act(*this);
-			prt->setCalledAction(sentence);
+			prt->setCalledAction("status " + (*input)[1]);
 			actionsLog.push_back(prt);
 		}
 		else if ((*input)[0] == "log")
 		{
 			PrintActionsLog* prt = new PrintActionsLog();
 			prt->act(*this);
-			prt->setCalledAction(sentence);
+			prt->setCalledAction("log");
 			actionsLog.push_back(prt);
 		}
 		else if ((*input)[0] == "backup")
 		{
 			BackupStudio* bck = new BackupStudio();
-			bck->setCalledAction(sentence);
+			bck->setCalledAction("backup");
 			actionsLog.push_back(bck);
 			bck->act(*this);
 		}
@@ -436,7 +436,7 @@ void Studio::start()
 		{
 			RestoreStudio* rst = new RestoreStudio();
 			rst->act(*this);
-			rst->setCalledAction(sentence);
+			rst->setCalledAction("restore");
 			actionsLog.push_back(rst);
 		}
 	delete input;
