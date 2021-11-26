@@ -163,6 +163,7 @@ _cid(StudioOther._cid)
 	{
 		workout_options.push_back(wrk);
 	}
+	delete &StudioOther;
 }
 
 Studio& Studio::operator=(const Studio &&StudioOther)
@@ -196,6 +197,7 @@ Studio& Studio::operator=(const Studio &&StudioOther)
 	{
 		workout_options.push_back(wrk);
 	}
+	delete &StudioOther;
 	return *this;
 }
 
@@ -323,7 +325,7 @@ void Studio::start()
 		}
 		else if ((*input)[0] == "order")
 		{
-			if (static_cast<int>((*input).size()) == 1)
+			if (static_cast<int>((*input).size()) == 1 or (*input)[1].empty())
 			{
 				delete input;
 				continue;
@@ -335,6 +337,7 @@ void Studio::start()
 				{
 					if (not std::isdigit(ch))
 					{
+						cout<<"this ends here"<<endl;
 						isNum = false;
 						break;
 					}
@@ -361,6 +364,11 @@ void Studio::start()
 		}
 		else if ((*input)[0] == "move")
 		{
+			if (static_cast<int>((*input).size()) == 1 or (*input)[1].empty())
+			{
+				delete input;
+				continue;
+			}
 			int from = std::stoi((*input)[1]);
 			int to = std::stoi((*input)[2]);
 			int id = std::stoi((*input)[3]);
@@ -371,6 +379,11 @@ void Studio::start()
 		}
 		else if ((*input)[0] == "close")
 		{
+		if (static_cast<int>((*input).size()) == 1 or (*input)[1].empty() or std::stoi((*input)[1]) >= getNumOfTrainers())
+			{
+				delete input;
+				continue;
+			}
 			int tid = std::stoi((*input)[1]);;
 			Close* closeTrainer = new Close(tid);
 			closeTrainer->act(*this);
@@ -379,7 +392,6 @@ void Studio::start()
 		}
 		else if ((*input)[0] == "closeall")
 		{
-		
 			CloseAll* close = new CloseAll();
 			close->act(*this);
 			close->setCalledAction(sentence);
@@ -395,6 +407,11 @@ void Studio::start()
 		}
 		else if ((*input)[0] == "status")
 		{
+		if (static_cast<int>((*input).size()) == 1 or (*input)[1].empty() or std::stoi((*input)[1]) >= getNumOfTrainers())
+			{
+				delete input;
+				continue;
+			}
 			int tid = std::stoi((*input)[1]);
 			PrintTrainerStatus* prt = new PrintTrainerStatus(tid);
 			prt->act(*this);
