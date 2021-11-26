@@ -147,7 +147,7 @@ Studio& Studio::operator=(const Studio &StudioOther)
 	return *this;
 }
 
-Studio::Studio(const Studio &&StudioOther):
+Studio::Studio(Studio &&StudioOther):
 open(StudioOther.open),
 _cid(StudioOther._cid)
 { // Move Constructor
@@ -163,10 +163,14 @@ _cid(StudioOther._cid)
 	{
 		workout_options.push_back(wrk);
 	}
-	delete &StudioOther;
+	StudioOther.trainers.clear();
+	StudioOther.actionsLog.clear();
+	StudioOther.workout_options.clear();
+	StudioOther.open = false;
+	StudioOther._cid = 0;
 }
 
-Studio& Studio::operator=(const Studio &&StudioOther)
+Studio& Studio::operator=(Studio &&StudioOther)
 { // Move assigment
 	if (this == &StudioOther)
 	{
@@ -197,7 +201,11 @@ Studio& Studio::operator=(const Studio &&StudioOther)
 	{
 		workout_options.push_back(wrk);
 	}
-	delete &StudioOther;
+	StudioOther.trainers.clear();
+	StudioOther.actionsLog.clear();
+	StudioOther.workout_options.clear();
+	StudioOther.open = false;
+	StudioOther._cid = 0;
 	return *this;
 }
 

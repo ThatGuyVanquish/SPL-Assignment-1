@@ -57,7 +57,7 @@ Trainer& Trainer::operator=(const Trainer& t)
 }
 
 // Move Constructor
-Trainer::Trainer(const Trainer&& t):
+Trainer::Trainer(Trainer&& t):
     capacity(t.capacity),
     open(t.open),
     customersList(),
@@ -73,11 +73,15 @@ Trainer::Trainer(const Trainer&& t):
     {
         orderList.push_back(order);
     }
-    delete &t;
+    t.customersList.clear();
+    t.open = false;
+    t.capacity = 0;
+    t.salary = 0;
+    t.orderList.clear();
 }
 
 // Move Assignment
-Trainer& Trainer::operator=(const Trainer&& t)
+Trainer& Trainer::operator=(Trainer&& t)
 {
     if (this != &t)
     {
@@ -98,8 +102,12 @@ Trainer& Trainer::operator=(const Trainer&& t)
         {
             orderList.push_back(order);
         }
-        delete &t;
     }
+    t.customersList.clear();
+    t.open = false;
+    t.capacity = 0;
+    t.salary = 0;
+    t.orderList.clear();
     return *this;
 }
 

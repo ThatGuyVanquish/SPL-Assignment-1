@@ -14,8 +14,8 @@ public:
     ~Studio();
     Studio(const Studio& StudioOther); // Copy constructor
     Studio& operator=(const Studio& StudioOther); // Copy assignment
-    Studio(const Studio&& StudioOther); // Move constructor
-    Studio& operator=(const Studio&& StudioOther); // Move assignment
+    Studio(Studio&& StudioOther); // Move constructor
+    Studio& operator=(Studio&& StudioOther); // Move assignment
     Studio(const std::string &configFilePath); // Constructor with filepath
     void start();
     int getNumOfTrainers() const;

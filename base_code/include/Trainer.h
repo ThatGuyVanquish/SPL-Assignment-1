@@ -12,8 +12,8 @@ public:
     Trainer(int t_capacity); // Constructor
     Trainer(const Trainer& t); // Copy Constructor
     Trainer& operator=(const Trainer& t); // Copy assignment
-    Trainer(const Trainer&& t); // Move Constructor
-    Trainer& operator=(const Trainer&& t); // Move assignment
+    Trainer(Trainer&& t); // Move Constructor
+    Trainer& operator=(Trainer&& t); // Move assignment
     ~Trainer(); // Destructor
     int getCapacity() const;
     Customer* getCustomer(int id);
