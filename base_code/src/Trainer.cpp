@@ -66,7 +66,7 @@ Trainer::Trainer(Trainer&& t):
 {
     for (Customer* customer : t.customersList)
     {
-        customersList.push_back(customer->clone());
+        customersList.push_back(customer);
         delete customer;
     }
     for (OrderPair order : t.orderList)
