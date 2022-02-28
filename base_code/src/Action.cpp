@@ -2,19 +2,15 @@
 
 extern Studio *backup;
 
-BaseAction::BaseAction()
-{};
 
-BaseAction::~BaseAction(){}
+// BaseAction class
+BaseAction::BaseAction(){} // Constructor
 
-ActionStatus BaseAction::getStatus() const
-{
-    return status;
-}
+BaseAction::~BaseAction(){} // Deconstructor
 
-void BaseAction::setStatus() {
-    status = COMPLETED;
-}
+ActionStatus BaseAction::getStatus() const {return status;}
+
+void BaseAction::setStatus() {status = COMPLETED;}
 
 void BaseAction::trigError(std::string err, std::string input)
 {
@@ -22,20 +18,11 @@ void BaseAction::trigError(std::string err, std::string input)
     calledAction = input;
 }
 
-std::string BaseAction::getCalledAction()
-{
-    return calledAction;
-}
+std::string BaseAction::getCalledAction() {return calledAction;}
 
-void BaseAction::setCalledAction(std::string action)
-{
-    calledAction = action;
-}
+void BaseAction::setCalledAction(std::string action) {calledAction = action;}
 
-void BaseAction::complete()
-{
-    status = COMPLETED;
-}
+void BaseAction::complete() {status = COMPLETED;}
 
 void BaseAction::error(std::string err)
 {
@@ -44,27 +31,41 @@ void BaseAction::error(std::string err)
     cout << errorMsg << endl;
 }
 
-std::string BaseAction::getErrorMsg() const
-{
-    return errorMsg;
-}
+std::string BaseAction::getErrorMsg() const {return errorMsg;}
 
-OpenTrainer::OpenTrainer(int _id, std::vector<Customer *> &customersList) : 
+
+// OpenTrainer Class
+OpenTrainer::OpenTrainer(int _id, std::vector<Customer *> &customersList) : // Constructor
 BaseAction(),
 trainerId(_id),
 customers(customersList)
 {};
 
-OpenTrainer::~OpenTrainer()
-{
-    customers.clear();
-}
+OpenTrainer *OpenTrainer::clone() {return new OpenTrainer(*this);}
+
+OpenTrainer::~OpenTrainer() {customers.clear();} // Deconstructor
 
 std::vector<Customer*> OpenTrainer::getCustomers()
 {
     return customers;
 }
 
+// Getters
+std::string OpenTrainer::toString() const
+{
+    std::string ret;
+    if (getStatus() == COMPLETED)
+    {
+        ret = "Completed";
+    }
+    else 
+    {
+        ret = "Error " + getErrorMsg();
+    }
+    return ret;
+}
+
+// Actions
 void OpenTrainer::act(Studio &studio)
 {
     Trainer *trainer = studio.getTrainer(trainerId);
@@ -83,7 +84,17 @@ void OpenTrainer::act(Studio &studio)
     }
 }
 
-std::string OpenTrainer::toString() const
+// Order Class
+Order::Order(int id): // Constructor
+trainerId(id)
+{}
+
+Order *Order::clone() {return new Order(*this);}
+
+Order::~Order(){} // Deconstructor
+
+// Getters
+std::string Order::toString() const
 {
     std::string ret;
     if (getStatus() == COMPLETED)
@@ -97,17 +108,7 @@ std::string OpenTrainer::toString() const
     return ret;
 }
 
-OpenTrainer *OpenTrainer::clone()
-{
-    return new OpenTrainer(*this);
-}
-
-Order::Order(int id): 
-trainerId(id)
-{};
-
-Order::~Order(){};
-
+// Actions
 void Order::act(Studio &studio)
 {
     Trainer *trainer = studio.getTrainer(trainerId);
@@ -139,40 +140,34 @@ void Order::act(Studio &studio)
     }
 }
 
-std::string Order::toString() const
-{
-    std::string ret;
-    if (getStatus() == COMPLETED)
-    {
-        ret = "Completed";
-    }
-    else 
-    {
-        ret = "Error " + getErrorMsg();
-    }
-    return ret;
-}
 
-Order *Order::clone()
-{
-    return new Order(*this);
-}
-
-MoveCustomer::MoveCustomer(int src, int dst, int customerId) : 
+// MoveCustomer Class
+MoveCustomer::MoveCustomer(int src, int dst, int customerId) : // Constructor
 srcTrainer(src),
 dstTrainer(dst),
 id(customerId)
 {};
 
-MoveCustomer::~MoveCustomer(){}
+MoveCustomer *MoveCustomer::clone() {return new MoveCustomer(*this);}
 
+MoveCustomer::~MoveCustomer(){} // Deconstructor
+
+// Getters
+std::string MoveCustomer::toString() const
+{
+    std::string ret;
+    getStatus() == COMPLETED ? ret = "Completed" : ret = "Error " + getErrorMsg();
+    return ret;
+}
+
+// Actions
 void MoveCustomer::act(Studio &studio)
 {
     Trainer *currTrainer = studio.getTrainer(srcTrainer);
     Trainer *nextTrainer = studio.getTrainer(dstTrainer);
-    if (currTrainer != nullptr and currTrainer->isOpen() and                  // Source trainer exists and is open
-        nextTrainer != nullptr and nextTrainer->isOpen() and                  // Destination trainer exists and is open
-        (static_cast<int>(nextTrainer->getCustomers().size())) < nextTrainer->getCapacity() and // Destination has room for customers
+    if (currTrainer != nullptr && currTrainer->isOpen() &&                  // Source trainer exists and is open
+        nextTrainer != nullptr && nextTrainer->isOpen() &&                  // Destination trainer exists and is open
+        (static_cast<int>(nextTrainer->getCustomers().size())) < nextTrainer->getCapacity() && // Destination has room for customers
         currTrainer->getCustomer(id) != nullptr)                              // Customer exists in source trainer's list
     {
         std::vector<Workout> workout_options = studio.getWorkoutOptions();
@@ -186,9 +181,7 @@ void MoveCustomer::act(Studio &studio)
         currTrainer->removeCustomerWithSalary(id);
         complete();
         if (currTrainer->getCustomers().empty())
-        {
             currTrainer->closeTrainer();
-        }
     }
     else
     {
@@ -196,40 +189,32 @@ void MoveCustomer::act(Studio &studio)
     }
 }
 
-std::string MoveCustomer::toString() const
+
+// Close Class
+Close::Close(int id): // Constructor
+trainerId(id)
+{}
+
+Close *Close::clone() {return new Close(*this);}
+
+Close::~Close(){} // Deconstructor
+
+// Getters
+std::string Close::toString() const
 {
     std::string ret;
-    if (getStatus() == COMPLETED)
-    {
-        ret = "Completed";
-    }
-    else 
-    {
-        ret = "Error " + getErrorMsg();
-    }
+    getStatus() == COMPLETED ? ret = "Completed" : ret = "Error " + getErrorMsg();
     return ret;
 }
 
-MoveCustomer *MoveCustomer::clone()
-{
-    return new MoveCustomer(*this);
-}
-
-Close::Close(int id): 
-trainerId(id)
-{};
-
-Close::~Close(){}
-
+// Actions
 void Close::act(Studio &studio)
 {
     vector<Customer*> temp;
     Trainer *trainer = studio.getTrainer(trainerId);
     temp = trainer->getCustomers();
-    if (trainer == nullptr or not trainer->isOpen())
-    {
+    if (trainer == nullptr || !(trainer->isOpen()))
         error("Trainer does not exist or is not open");
-    }
     else
     {
         for (Customer* customer : temp)
@@ -243,114 +228,91 @@ void Close::act(Studio &studio)
    }
 }
 
-std::string Close::toString() const
+
+// CloseAll Class
+CloseAll::CloseAll(){} // Constructor
+
+CloseAll *CloseAll::clone() {return new CloseAll(*this);}
+
+CloseAll::~CloseAll(){} // Deconstructor
+
+// Getters
+std::string CloseAll::toString() const
 {
     std::string ret;
-        if (getStatus() == COMPLETED)
-    {
-        ret = "Completed";
-    }
-    else 
-    {
-        ret = "Error " + getErrorMsg();
-    }
+    getStatus() == COMPLETED ? ret = "Completed" : ret = "Error " + getErrorMsg();
     return ret;
 }
 
-Close *Close::clone()
-{
-    return new Close(*this);
-}
-
-CloseAll::CloseAll(){};
-
-CloseAll::~CloseAll(){}
-
+// Actions
 void CloseAll::act(Studio &studio)
 {
     for (int i = 0; i < studio.getNumOfTrainers(); i++)
     {
         Trainer *currTrain = studio.getTrainer(i);
         if (currTrain->isOpen())
-        {
             cout << "Trainer " << i << " closed."<< " Salary " << std::to_string(currTrain->getSalary()) << "NIS" << endl;
-        }
     }
     complete();
 }
 
-std::string CloseAll::toString() const
-{
-    std::string ret;
-    if (getStatus() == COMPLETED)
-    {
-        ret = "Completed";
-    }
-    else 
-    {
-        ret = "Error " + getErrorMsg();
-    }
-    return ret;
-}
 
-CloseAll *CloseAll::clone()
-{
-    return new CloseAll(*this);
-}
+// PrintWorkoutOptions Class
+PrintWorkoutOptions::PrintWorkoutOptions(){} // Constructor
 
-PrintWorkoutOptions::PrintWorkoutOptions(){};
+PrintWorkoutOptions *PrintWorkoutOptions::clone() {return new PrintWorkoutOptions(*this);}
 
-PrintWorkoutOptions::~PrintWorkoutOptions(){}
+PrintWorkoutOptions::~PrintWorkoutOptions(){} // Deconstructor
 
-void PrintWorkoutOptions::act(Studio &studio)
-{
-    std::vector<Workout> wOptions = studio.getWorkoutOptions();
-    for (Workout wrk : wOptions)
-    {
-        std::string type;
-        switch (wrk.getType())
-        {
-        case ANAEROBIC:
-        {
-            type = "Anaerobic";
-        }
-        case CARDIO:
-        {
-            type = "Cardio";
-        }
-        case MIXED:
-        {
-            type = "Mixed";
-        }
-        }
-        cout << wrk.getName() + ", " + type + ", " + std::to_string(wrk.getPrice()) << endl;
-    }
-    complete();
-}
-
+// Getters
 std::string PrintWorkoutOptions::toString() const
 {
     std::string ret;
-    if (getStatus() == COMPLETED)
-    {
-        ret = "Completed";
-    }
-    else 
-    {
-        ret = "Error " + getErrorMsg();
-    }
+    getStatus() == COMPLETED ? ret = "Completed" : ret = "Error " + getErrorMsg();
     return ret;
 }
 
-PrintWorkoutOptions *PrintWorkoutOptions::clone()
+// Actions
+void PrintWorkoutOptions::act(Studio &studio)
 {
-    return new PrintWorkoutOptions(*this);
+    std::vector<Workout> wOptions = studio.getWorkoutOptions();
+    for (Workout workout : wOptions)
+    {
+        std::string type;
+        switch (workout.getType())
+        {
+        case ANAEROBIC:
+            type = "Anaerobic";
+            break;
+        case CARDIO:
+            type = "Cardio";
+            break;
+        case MIXED:
+            type = "Mixed";
+            break;
+        }
+        cout << workout.getName() + ", " + type + ", " + std::to_string(workout.getPrice()) << endl;
+    }
+    complete();
 }
 
-PrintTrainerStatus::PrintTrainerStatus(int id) : trainerId(id){};
 
-PrintTrainerStatus::~PrintTrainerStatus(){}
+// PrintTrainerStatus Class
+PrintTrainerStatus::PrintTrainerStatus(int id) : trainerId(id){} // Constructor
 
+PrintTrainerStatus *PrintTrainerStatus::clone() {return new PrintTrainerStatus(*this);}
+
+PrintTrainerStatus::~PrintTrainerStatus(){} // Deconstructor
+
+// Getters
+std::string PrintTrainerStatus::toString() const
+{
+    std::string ret;
+    getStatus() == COMPLETED ? ret = "Completed" : ret = "Error " + getErrorMsg();
+    return ret;
+}
+
+// Actions
 void PrintTrainerStatus::act(Studio &studio)
 {
     Trainer *trainer = studio.getTrainer(trainerId);
@@ -372,61 +334,47 @@ void PrintTrainerStatus::act(Studio &studio)
     complete();
 }
 
-std::string PrintTrainerStatus::toString() const
-{
-    std::string ret;
-    if (getStatus() == COMPLETED)
-    {
-        ret = "Completed";
-    }
-    else 
-    {
-        ret = "Error " + getErrorMsg();
-    }
-    return ret;
-}
 
-PrintTrainerStatus *PrintTrainerStatus::clone()
-{
-    return new PrintTrainerStatus(*this);
-}
+// PrintActionsLog Class
+PrintActionsLog::PrintActionsLog(){} // Constructor
 
-PrintActionsLog::PrintActionsLog(){};
+PrintActionsLog *PrintActionsLog::clone() {return new PrintActionsLog(*this);}
 
-PrintActionsLog::~PrintActionsLog(){}
+PrintActionsLog::~PrintActionsLog(){} // Deconstructor
 
-void PrintActionsLog::act(Studio &studio)
-{
-    for (BaseAction *action : studio.getActionsLog())
-    {
-        cout << action->getCalledAction() + " " + action->toString() << endl;
-    }
-    complete();
-}
-
+// Getters
 std::string PrintActionsLog::toString() const
 {
     std::string ret;
-    if (getStatus() == COMPLETED)
-    {
-        ret = "Completed";
-    }
-    else 
-    {
-        ret = "Error " + getErrorMsg();
-    }
+    getStatus() == COMPLETED ? ret = "Completed" : ret = "Error " + getErrorMsg();
     return ret;
 }
 
-PrintActionsLog *PrintActionsLog::clone()
+// Actions
+void PrintActionsLog::act(Studio &studio)
 {
-    return new PrintActionsLog(*this);
+    for (BaseAction *action : studio.getActionsLog())
+        cout << action->getCalledAction() + " " + action->toString() << endl;
+    complete();
 }
 
-BackupStudio::BackupStudio(){};
 
-BackupStudio::~BackupStudio(){}
+// BackupStudio Class
+BackupStudio::BackupStudio(){} // Constructor
 
+BackupStudio *BackupStudio::clone() {return new BackupStudio(*this);}
+
+BackupStudio::~BackupStudio(){} // Deconstructor
+
+// Getters
+std::string BackupStudio::toString() const
+{
+    std::string ret;
+    getStatus() == COMPLETED ? ret = "Completed" : ret = "Error " + getErrorMsg();
+    return ret;
+}
+
+// Actions
 void BackupStudio::act(Studio &studio)
 {
     complete();
@@ -434,29 +382,23 @@ void BackupStudio::act(Studio &studio)
     backup = new Studio(studio);
 }
 
-std::string BackupStudio::toString() const
+
+// RestoreStudio Class
+RestoreStudio::RestoreStudio(){} // Constructor
+
+RestoreStudio *RestoreStudio::clone() {return new RestoreStudio(*this);}
+
+RestoreStudio::~RestoreStudio(){} // Deconstructor
+
+// Getters
+std::string RestoreStudio::toString() const
 {
     std::string ret;
-    if (getStatus() == COMPLETED)
-    {
-        ret = "Completed";
-    }
-    else 
-    {
-        ret = "Error " + getErrorMsg();
-    }
+    getStatus() == COMPLETED ? ret = "Completed" : ret = "Error " + getErrorMsg();
     return ret;
 }
 
-BackupStudio *BackupStudio::clone()
-{
-    return new BackupStudio(*this);
-}
-
-RestoreStudio::RestoreStudio(){};
-
-RestoreStudio::~RestoreStudio(){}
-
+// Actions
 void RestoreStudio::act(Studio &studio)
 {
     if (backup != nullptr)
@@ -465,26 +407,6 @@ void RestoreStudio::act(Studio &studio)
         complete();
     }
     else
-    {
         error("No backup available");
-    }
 }
 
-std::string RestoreStudio::toString() const
-{
-    std::string ret;
-    if (getStatus() == COMPLETED)
-    {
-        ret = "Completed";
-    }
-    else 
-    {
-        ret = "Error " + getErrorMsg();
-    }
-    return ret;
-}
-
-RestoreStudio *RestoreStudio::clone()
-{
-    return new RestoreStudio(*this);
-}

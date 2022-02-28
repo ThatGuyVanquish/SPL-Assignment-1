@@ -47,11 +47,16 @@ private:
 class OpenTrainer : public BaseAction {
 public:
     OpenTrainer(int id, std::vector<Customer *> &customersList);
-    ~OpenTrainer();
-    void act(Studio &studio);
-    std::string toString() const;
     OpenTrainer* clone() override;
+    ~OpenTrainer();
+
+    // Getters
+    std::string toString() const;
     std::vector<Customer*> getCustomers();
+
+    // Actions
+    void act(Studio &studio);
+
 private:
 	const int trainerId;
 	std::vector<Customer *> customers;
@@ -61,10 +66,15 @@ private:
 class Order : public BaseAction {
 public:
     Order(int id);
-    ~Order();
-    void act(Studio &studio);
-    std::string toString() const;
     Order* clone() override;
+    ~Order();
+
+    // Getters
+    std::string toString() const;
+
+    // Actions
+    void act(Studio &studio);
+    
 private:
     const int trainerId;
 };
@@ -73,10 +83,15 @@ private:
 class MoveCustomer : public BaseAction {
 public:
     MoveCustomer(int src, int dst, int customerId);
-    ~MoveCustomer();
-    void act(Studio &studio);
-    std::string toString() const;
     MoveCustomer* clone() override;
+    ~MoveCustomer();
+
+    // Getters
+    std::string toString() const;
+
+    // Actions
+    void act(Studio &studio);
+    
 private:
     const int srcTrainer;
     const int dstTrainer;
@@ -87,10 +102,15 @@ private:
 class Close : public BaseAction {
 public:
     Close(int id);
-    ~Close();
-    void act(Studio &studio);
-    std::string toString() const;
     Close* clone() override;
+    ~Close();
+    
+    // Getters
+    std::string toString() const;
+
+    // Actions
+    void act(Studio &studio);
+    
 private:
     const int trainerId;
 };
@@ -99,11 +119,14 @@ private:
 class CloseAll : public BaseAction {
 public:
     CloseAll();
-    ~CloseAll();
-    void act(Studio &studio);
-    std::string toString() const;
     CloseAll* clone() override;
-private:
+    ~CloseAll();
+    
+    // Getters
+    std::string toString() const;
+
+    // Actions
+    void act(Studio &studio);
 };
 
 
@@ -111,20 +134,28 @@ class PrintWorkoutOptions : public BaseAction {
 public:
     PrintWorkoutOptions();
     ~PrintWorkoutOptions();
-    void act(Studio &studio);
-    std::string toString() const;
     PrintWorkoutOptions* clone() override;
-private:
+
+    // Getters
+    std::string toString() const;
+    
+    // Actions
+    void act(Studio &studio);
 };
 
 
 class PrintTrainerStatus : public BaseAction {
 public:
     PrintTrainerStatus(int id);
-    ~PrintTrainerStatus();
-    void act(Studio &studio);
-    std::string toString() const;
     PrintTrainerStatus* clone() override;
+    ~PrintTrainerStatus();
+    
+    // Getters
+    std::string toString() const;
+
+    // Actions
+    void act(Studio &studio);
+    
 private:
     const int trainerId;
 };
@@ -133,33 +164,42 @@ private:
 class PrintActionsLog : public BaseAction {
 public:
     PrintActionsLog();
-    ~PrintActionsLog();
-    void act(Studio &studio);
-    std::string toString() const;
     PrintActionsLog* clone() override;
-private:
+    ~PrintActionsLog();
+    
+    // Getters
+    std::string toString() const;
+
+    // Actions
+    void act(Studio &studio);
 };
 
 
 class BackupStudio : public BaseAction {
 public:
     BackupStudio();
-    ~BackupStudio();
-    void act(Studio &studio);
-    std::string toString() const;
     BackupStudio* clone() override;
-private:
+    ~BackupStudio();
+    
+    // Getters
+    std::string toString() const;
+
+    // Actions
+    void act(Studio &studio);
 };
 
 
 class RestoreStudio : public BaseAction {
 public:
     RestoreStudio();
-    ~RestoreStudio();
-    void act(Studio &studio);
-    std::string toString() const;
     RestoreStudio* clone() override;
-};
+    ~RestoreStudio();
+    
+    // Getters
+    std::string toString() const;
 
+    // Actions
+    void act(Studio &studio);
+};
 
 #endif
