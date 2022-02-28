@@ -1,9 +1,13 @@
 #ifndef ACTION_H_
 #define ACTION_H_
 
-#include <string>
-#include <iostream>
 #include "Customer.h"
+#include "../include/Trainer.h"
+#include "../include/Studio.h"
+
+#include <iostream>
+
+using namespace std;
 
 enum ActionStatus{
     COMPLETED, ERROR
@@ -14,19 +18,25 @@ class Studio;
 class BaseAction{
 public:
     BaseAction();
-    virtual void act(Studio& studio)=0;
-    virtual std::string toString() const=0;
-    virtual BaseAction* clone()=0;
+    virtual void act(Studio& studio) = 0;
+    virtual BaseAction* clone() = 0;
     virtual ~BaseAction();
+
+    // Getters
     ActionStatus getStatus() const;
-    void trigError(std::string err, std::string input);
     std::string getCalledAction();
+    virtual std::string toString() const = 0;
+    
+    // Actions
+    void trigError(std::string err, std::string input);
     void setCalledAction(std::string action); // Saves input in calledAction to be recalled in PrintActionsLog
     void setStatus();
+
 protected:
     void complete();
     void error(std::string errorMsg);
     std::string getErrorMsg() const;
+
 private:
     std::string errorMsg;
     ActionStatus status;

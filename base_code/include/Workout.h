@@ -8,12 +8,16 @@ enum WorkoutType{
 };
 
 class Workout{
+
 public:
     Workout(int w_id, std::string w_name, int w_price, WorkoutType w_type);
+
+    // Getters
     int getId() const;
     std::string getName() const;
     int getPrice() const;
     WorkoutType getType() const;
+
 private:
 	const int id;
     const std::string name;

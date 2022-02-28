@@ -1,9 +1,8 @@
 #include "../include/Trainer.h"
-#include <algorithm>
-#include <iostream>
 
 using namespace std;
 
+// Rule of Five
 // Constructor
 Trainer::Trainer(int t_capacity): 
     capacity(t_capacity),
@@ -12,6 +11,11 @@ Trainer::Trainer(int t_capacity):
     orderList(),
     salary(0)
     {};
+
+Trainer* Trainer::clone()
+{
+    return new Trainer(*this);
+}
 
 // Copy Constructor
 Trainer::Trainer(const Trainer& t): 
@@ -111,11 +115,7 @@ Trainer& Trainer::operator=(Trainer&& t)
     return *this;
 }
 
-Trainer* Trainer::clone()
-{
-    return new Trainer(*this);
-}
-
+// Deconstructor
 Trainer::~Trainer()
 {
     for (Customer* customer : customersList)
@@ -124,14 +124,11 @@ Trainer::~Trainer()
     }
 }
 
+
+// Getters
 int Trainer::getCapacity() const 
 {
     return capacity;
-}
-
-int Trainer::getRemainingSlots() const
-{
-    return capacity-customersList.size();
 }
 
 Customer* Trainer::getCustomer(int id)
@@ -156,12 +153,6 @@ std::vector<OrderPair>& Trainer::getOrders()
     return orderList;
 }
 
-void Trainer::addOrder(OrderPair order) // Might need to make it pass by value
-{
-    salary = salary + order.second.getPrice();
-    orderList.push_back(order);
-}
-
 int Trainer::getSalary() const
 {
     return salary;
@@ -170,6 +161,26 @@ int Trainer::getSalary() const
 bool Trainer::isOpen() const
 {
     return open;
+}
+
+int Trainer::getRemainingSlots() const
+{
+    return capacity-customersList.size();
+}
+
+std::string Trainer::getStatus()
+{
+    std:: string ret;
+    isOpen() ? ret = "open" : ret = "closed";
+    return ret;
+}
+
+
+// Actions
+void Trainer::addOrder(OrderPair order) // Might need to make it pass by value
+{
+    salary = salary + order.second.getPrice();
+    orderList.push_back(order);
 }
 
 void Trainer::addCustomer(Customer* customer) 
@@ -209,8 +220,6 @@ void Trainer::removeCustomer(int id)
     {
         if (id == customer->getId())
             {
-        
-                
                 customersList.erase(customersList.begin() + pos);
                 delete customer;
                 break;
@@ -257,13 +266,4 @@ void Trainer::closeTrainer()
     {
         removeCustomer(customer->getId());
     }
-}
-
-std::string Trainer::getStatus()
-{
-    if (isOpen())
-    {
-        return "open";
-    }
-    return "closed";
 }

@@ -1,8 +1,4 @@
 #include "../include/Action.h"
-#include "../include/Trainer.h"
-#include "../include/Studio.h"
-
-using namespace std;
 
 extern Studio *backup;
 
