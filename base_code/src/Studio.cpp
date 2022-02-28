@@ -1,95 +1,77 @@
 #include "../include/Studio.h"
-#include "../include/Action.h"
-#include <iostream>
-#include <fstream>
-#include <algorithm>
 
-using namespace std;
+std::vector<std::string> *Studio::splitLine(const std::string &line, char delimeter)
+{
+	std::string currentWord("");
+	std::vector<std::string> *configLines = new std::vector<std::string>();
+	char currentChar;
+	for (int i = 0; i < static_cast<int>(line.size()); i++)
+	{
+		currentChar = line[i];
+		if (currentChar != delimeter)
+			currentWord.push_back(currentChar);
+		else
+		{
+			configLines->push_back(currentWord);
+			currentWord = "";
+		}
+	}
+	configLines->push_back(line);
+	return configLines;
+}
+
 
 Studio::Studio():
 open(false),
 _cid(0)
-{} // Empty constructor
+{} 
 
-std::vector<std::string> *Studio::SplitSentence(const std::string &Sentence, char splt)
-{
-	std::string line("");
-	std::vector<std::string> *text_by_lines = new std::vector<std::string>();
-	char current_char;
-	for (int i = 0; i < static_cast<int>(Sentence.size()); i++)
-	{
-		current_char = Sentence[i];
-		if (current_char != splt)
-		{
-			line.push_back(current_char);
-		}
-		else
-		{
-			text_by_lines->push_back(line);
-			line = "";
-		}
-	}
-	text_by_lines->push_back(line);
-	return text_by_lines;
-}
-
-Studio::Studio(const std::string &configFilePath):
+Studio::Studio(const std::string &configFilePath): // Constructor with filepath
 open(true),
 _cid(0)
-{ // Constructor with filepath
-	std::string Text;
-	ifstream MyReadFile(configFilePath);
-	int data_type = 0;
-	std::string workout_name("");
+{ 
+	std::string currentLine;
+	ifstream configFile(configFilePath);
+	int configCounter = 0;
+	std::string workoutName("");
 	WorkoutType workout;
 	std::string workoutTypeStr;
-	int workout_price;
+	int workoutPrice;
 	int workoutId = 0;
-	while (getline(MyReadFile, Text))
+	while (getline(configFile, currentLine))
 	{
-		if (Text.empty())
-		{
+		if (currentLine.empty())
 			continue;
-		}
-		if (Text[0] == '#')
-		{
-			data_type++;
-		}
-		else if (data_type == 2)
+		if (currentLine[0] == '#')
+			configCounter++;
+		else if (configCounter == 2)
 		// 1 is unnecessary because we can count number of different capacities
 		{
-			std::vector<std::string> *text_by_lines = SplitSentence(Text, ',');
-			for (std::string str : *text_by_lines)
-			{
+			std::vector<std::string> *configLines = splitLine(currentLine, ',');
+			for (std::string str : *configLines)
 				trainers.push_back(new Trainer(stoi(str)));
-			}
-			delete text_by_lines;
+			delete configLines;
 		}
-		else if (data_type == 3)
+		else if (configCounter == 3)
 		{
-			std::vector<std::string> *WordsFromCase_ = SplitSentence(Text, ',');
-			workout_name = (*WordsFromCase_)[0];
-			workoutTypeStr = (*WordsFromCase_)[1];
+			std::vector<std::string> *currentWorkout = splitLine(currentLine, ',');
+			workoutName = (*currentWorkout)[0];
+			workoutTypeStr = (*currentWorkout)[1];
 			
 			if (workoutTypeStr == " Anaerobic")
-			{
 				workout = WorkoutType::ANAEROBIC;
-			}
 			else if (workoutTypeStr == " Mixed")
-			{
 				workout = WorkoutType::MIXED;
-			}
 		   	else if (workoutTypeStr == " Cardio")
-			{
 				workout = WorkoutType::CARDIO;
-			}
-			workout_price = std::stoi((*WordsFromCase_)[2]); // stoi function convert string to number.
-			workout_options.push_back(Workout(workoutId, workout_name, workout_price, workout));
+
+			workoutPrice = std::stoi((*currentWorkout)[2]);
+			workout_options.push_back(Workout(workoutId, workoutName, workoutPrice, workout));
 			workoutId++;
-			delete WordsFromCase_;
+			delete currentWorkout;
 		}
 	}
-	MyReadFile.close();
+	configFile.close();
 }
 
 Studio::Studio(const Studio &StudioOther): 
@@ -248,20 +230,19 @@ std::vector<Workout> &Studio::getWorkoutOptions()
 
 bool Studio::canOpen(int tid, int numOfCustomers)
 {
-	return (tid >= 0 and tid < static_cast<int>(trainers.size()) && not trainers[tid]->isOpen());
+	return (tid >= 0 && tid < static_cast<int>(trainers.size()) && !trainers[tid]->isOpen());
 }
 
 void Studio::start()
 {
 	std::cout << "The Studio is now open!" << std::endl;
-	//int id = 0;
 	open = true;
 	
 	while (open) // Input loop
 	{
 		std::string sentence;
 		getline(cin, sentence);
-		std::vector<string> *input = Studio::SplitSentence(sentence, ' ');
+		std::vector<string> *input = Studio::splitLine(sentence, ' ');
 		if ((*input)[0] == "open")
 		{
 			if (static_cast<int>((*input).size()) <= 2)
@@ -283,7 +264,7 @@ void Studio::start()
 			std::string inserted = "open " + (*input)[1];
 			for (int i = 2; i < static_cast<int>((*input).size()); i++)
 			{
-				std::vector<string> *currentCustomer = Studio::SplitSentence((*input)[i], ',');
+				std::vector<string> *currentCustomer = Studio::splitLine((*input)[i], ',');
 				if (static_cast<int>(currentCustomer->size()) == 1)
 				{
 					delete currentCustomer;
@@ -450,3 +431,4 @@ void Studio::start()
 	delete input;
 	}
 }
+
